@@ -48,7 +48,7 @@ const SummaryList: FunctionComponent<Props> = () => {
         </Stack>
       </Box>
       <Divider sx={{ borderColor: "primary.main", my: 2 }} />
-      <Box sx={{ px: 4 }}>
+      <Box sx={{ pl: 4 }}>
         <Stack
           direction="row"
           justifyContent="space-between"
