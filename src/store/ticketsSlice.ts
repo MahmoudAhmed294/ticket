@@ -31,10 +31,15 @@ export const ticketsSlice = createSlice({
          state.total = state.Summary.map(({price})=>price).reduce((total, num) => total + num)
         
     },
+    deleteTicketFromSummary:(state, action: PayloadAction<number>)=> {
+        state.Summary = state.Summary.filter(({id})=> id !== action.payload)
+         state.total = state.Summary.map(({price})=>price).reduce((total, num) => total + num)
+        
+    },
   },
 });
 
-export const { addTicketToSummary } = ticketsSlice.actions;
+export const { addTicketToSummary ,deleteTicketFromSummary } = ticketsSlice.actions;
 
 export const getSummary = (state: RootState) => state.tickets.Summary;
 export const getTotal = (state: RootState) => state.tickets.total;

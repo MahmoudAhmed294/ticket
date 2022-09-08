@@ -18,7 +18,9 @@ import SummaryList from "components/SummaryList";
 import TicketList from "components/TicketList";
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getTotal } from "store/ticketsSlice";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
+import { useAppSelector } from "utils/hooks/useStore";
 interface Props {}
 const Index: FunctionComponent<Props> = () => {
   const [radioValue, setRadioValue] = useState("Cash");
@@ -29,6 +31,8 @@ const Index: FunctionComponent<Props> = () => {
   // const [summaryList, setSummaryList] = useState(false);
   const { t } = useTranslation();
   const IsSm = IsScreenIn_sm();
+  const Total = useAppSelector(getTotal)
+
 
   return (
     <Box>
@@ -179,7 +183,7 @@ const Index: FunctionComponent<Props> = () => {
                 sx={{ width: "100%"  , color:"primary.main" , mt:1.5 }}
               >
                 <Typography variant="h3">{t("Total")}</Typography>
-                <Typography variant="h3">1700.00 EGP</Typography>
+                <Typography variant="h3">{Total}.00 EGP</Typography>
               </Stack>
 
               <Button variant="contained" fullWidth sx={{ mt: 1.5 }}>
