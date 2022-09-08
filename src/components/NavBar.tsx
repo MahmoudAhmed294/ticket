@@ -52,9 +52,11 @@ const NavBar: FunctionComponent<Props> = () => {
                 alignItems="center"
                 sx={{ flexGrow: 1 }}
               >
-                <Typography variant="h4">Ahmed Khaled</Typography>
-                <Typography variant="h4">5 Sep 2022</Typography>
-                <Typography variant="h4">Gate 2</Typography>
+                <Typography variant={IsSm ? "h6" : "h4"}>
+                  Ahmed Khaled
+                </Typography>
+                <Typography variant={IsSm ? "caption" : "h4"}>5 Sep 2022</Typography>
+                <Typography variant={IsSm ? "caption" : "h4"}>Gate 2</Typography>
               </Stack>
             ) : (
               <Stack

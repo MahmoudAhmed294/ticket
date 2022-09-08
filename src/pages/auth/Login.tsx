@@ -44,9 +44,9 @@ const Login = () => {
               <img
                 src={logo}
                 alt="logo"
-                style={{ width: "75px", height: "75px", objectFit: "cover" }}
+                style={{ width: "65px", height: "65px", objectFit: "cover" }}
               />
-              <Typography variant="h2" sx={{ color: "primary.main" , fontWeight: "500" }}>
+              <Typography variant="h3" sx={{ color: "primary.main" , fontWeight: "500" }}>
                 Ticket management system{" "}
               </Typography>
             </Stack>
@@ -64,10 +64,9 @@ const Login = () => {
             direction="column"
             alignItems="center"
             justifyContent="center"
-            spacing={3}
           >
-            <TextField label="Username or Email" variant="outlined" fullWidth />
-            <FormControl variant="outlined" fullWidth>
+            <TextField label="Username or Email" variant="outlined" fullWidth sx={{mb:3}} />
+            <FormControl variant="outlined" fullWidth sx={{mb:1}}>
               <InputLabel>Password</InputLabel>
               <OutlinedInput
                 value={form.password}
@@ -91,7 +90,7 @@ const Login = () => {
             <Link href="#" underline="none" alignSelf="end">
               Forgot password?
             </Link>
-            <Button variant="contained" fullWidth onClick={()=>navigate('/')}>
+            <Button variant="contained" fullWidth onClick={()=>navigate('/')} sx={{mt:2}} size="large">
               Login
             </Button>
           </Stack>

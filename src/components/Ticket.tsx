@@ -3,6 +3,7 @@ import { FunctionComponent, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import TicketImg from "assets/images/ticket.svg";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
+import { FlashOnRounded } from "@mui/icons-material";
 
 interface Props {
   title: string;
@@ -35,12 +36,19 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
     }
   }, []);
 
+  const AddTicket = () => {
+    setIsSelected(true);
+    setTimeout(() => {
+      setIsSelected(false);
+    }, 1000);
+  };
+
   return (
     <Stack
-      onClick={() => setIsSelected(!isSelected)}
+      onClick={() => AddTicket()}
       sx={{
-        mb: {xs:"4px" , sm:1.5},
-        mr: {xs:"4px" , sm:1.5},
+        mb: { xs: "4px", sm: 1.5 },
+        mr: { xs: "4px", sm: 1.5 },
         backgroundColor: color,
         cursor: isSummary ? "unset" : "pointer",
         py: 2,
@@ -51,7 +59,6 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
         color: "body.light",
         border: isSelected && !isSummary ? "2px solid " : "unset",
         borderColor: "primary.main",
-        transform: isSelected && !isSummary ? "scale(0.8)" : "scale(1)",
         transition: "0.3s ease",
       }}
       direction="column"
@@ -68,7 +75,7 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
         variant={isSummary ? "overline" : "body1"}
         sx={{
           textAlign: "center",
-          mt:{xs:"0 !important" , sm:"12px"}
+          mt: { xs: "0 !important", sm: "12px" },
         }}
       >
         {title}

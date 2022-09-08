@@ -26,7 +26,7 @@ const Index: FunctionComponent<Props> = () => {
     setRadioValue((event.target as HTMLInputElement).value);
   };
 
-  const [summaryList, setSummaryList] = useState(false);
+  // const [summaryList, setSummaryList] = useState(false);
   const { t } = useTranslation();
   const IsSm = IsScreenIn_sm();
 
@@ -45,10 +45,10 @@ const Index: FunctionComponent<Props> = () => {
           }}
         >
           <Grid item md={7} xs={12}>
-            <Stack direction="column" sx={{ mt: { xs: 3, sm: 0 } }}>
+            <Stack direction="column" sx={{ mt: { xs: 1, sm: 0 } }}>
               <Stack
                 direction="column"
-                sx={{ mt: 3, order: { xs: 3, sm: "unset" } }}
+                sx={{ mt: { xs: 1, sm: 3 }, order: { xs: 3, sm: "unset" } }}
               >
                 <Typography variant="h4">
                   {t("1. Choose Payment method")}
@@ -65,19 +65,19 @@ const Index: FunctionComponent<Props> = () => {
                     value="Cash"
                     control={<Radio sx={{ color: "body.main" }} />}
                     label="Cash"
-                    sx={{ mr: {xs:3,sm:5} }}
+                    sx={{ mr: { xs: 1, sm: 5 } }}
                   />
                   <FormControlLabel
                     value="Card"
                     control={<Radio sx={{ color: "body.main" }} />}
                     label="Card"
-                    sx={{ mr: {xs:3,sm:5} }}
+                    sx={{ mr: { xs: 1, sm: 5 } }}
                   />
                   <FormControlLabel
                     value="Visa"
                     control={<Radio sx={{ color: "body.main" }} />}
                     label="Visa"
-                    sx={{ mr: {xs:3,sm:5} }}
+                    sx={{ mr: { xs: 1, sm: 5 } }}
                   />
                 </RadioGroup>
               </Stack>
@@ -89,46 +89,40 @@ const Index: FunctionComponent<Props> = () => {
                   order: { xs: 3, sm: "unset" },
                 }}
               >
-                {radioValue !== "Cash" && (
-                  <>
-                    <Typography variant="h4">
-                      {t("2. Enter card ID")}
-                    </Typography>
-                    <TextField
-                      variant="outlined"
-                      label="Card ID"
-                      sx={{ mt: 1.5 }}
-                      fullWidth
-                    />
-                  </>
-                )}
+                <>
+                  <Typography variant="h4">{t("2. Enter card ID")}</Typography>
+                  <TextField
+                    variant="outlined"
+                    label="Card ID"
+                    sx={{ mt: 1.5 }}
+                    fullWidth
+                  />
+                </>
               </Box>
-              {radioValue !== "Cash" && (
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  flexWrap="wrap"
-                  sx={{
-                    mt: 1.5,
-                    order: { xs: 1, sm: "unset" },
-                    maxWidth: { xs: "100%", md: "470px" },
-                  }}
-                >
-                  <Stack direction="row" spacing={0.5} alignItems="baseline">
-                    <Typography variant="h5" sx={{ color: "primary.main" }}>
-                      {t("Member name:")}
-                    </Typography>
-                    <Typography variant="caption">Mustafa adel</Typography>
-                  </Stack>
-                  <Stack direction="row" spacing={0.5} alignItems="baseline">
-                    <Typography variant="h5" sx={{ color: "primary.main" }}>
-                      {t("Last renew year:")}
-                    </Typography>
-                    <Typography variant="caption">2021</Typography>
-                  </Stack>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                flexWrap="wrap"
+                sx={{
+                  mt: {xs:0, sm: 1.5},
+                  order: { xs: 1, sm: "unset" },
+                  maxWidth: { xs: "100%", md: "470px" },
+                }}
+              >
+                <Stack direction="row" spacing={0.5} alignItems="baseline">
+                  <Typography variant="h5" sx={{ color: "primary.main" }}>
+                    {t("Member name:")}
+                  </Typography>
+                  <Typography variant="caption">Mustafa adel</Typography>
                 </Stack>
-              )}
+                <Stack direction="row" spacing={0.5} alignItems="baseline">
+                  <Typography variant="h5" sx={{ color: "primary.main" }}>
+                    {t("Member ID:")}
+                  </Typography>
+                  <Typography variant="caption">34</Typography>
+                </Stack>
+              </Stack>
             </Stack>
             {IsSm ? (
               ""
@@ -140,22 +134,24 @@ const Index: FunctionComponent<Props> = () => {
                 variant="h4"
                 sx={{
                   mb: 2,
-                  mt: { xs: 3, sm: "unset" },
+                  mt: { xs: 1, sm: "unset" },
                   display: "flex",
                   alignItems: "center",
                 }}
               >
-                {summaryList && (
+                {/* {summaryList && (
                   <IconButton
                     onClick={() => setSummaryList(false)}
                     sx={{ color: "body.main" }}
                   >
                     <KeyboardArrowLeft />
                   </IconButton>
-                )}
+                )} */}
                 {t("3. Choose your ticket")}
               </Typography>
-              {summaryList && IsSm ? <SummaryList /> : <TicketList />}
+              {/* <SummaryList /> */}
+              <TicketList />
+              {/* { IsSm ? <TicketList /> : ""} */}
             </Box>
           </Grid>
 
@@ -174,14 +170,14 @@ const Index: FunctionComponent<Props> = () => {
               <SummaryList />
             </Grid>
           )}
-          {IsSm && !summaryList ? (
+          {IsSm  ? (
             <Button
               variant="contained"
               fullWidth
               sx={{ mt: 3 }}
-              onClick={() => setSummaryList(true)}
+              
             >
-              {t("Next")}
+              {t("Print")}
             </Button>
           ) : (
             ""

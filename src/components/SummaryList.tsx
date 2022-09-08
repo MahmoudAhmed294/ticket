@@ -13,7 +13,7 @@ const SummaryList: FunctionComponent<Props> = () => {
       justifyContent="space-between"
       sx={{ height: "100%" }}
     >
-      <Box sx={{ px: {xs:0 , sm:4}, pt: {sm:3} }}>
+      <Box sx={{ pl: {xs:0 , sm:4}, pt: {sm:3} }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           {t("Summary")}
         </Typography>
