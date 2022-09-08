@@ -105,7 +105,7 @@ const Index: FunctionComponent<Props> = () => {
                 justifyContent="space-between"
                 flexWrap="wrap"
                 sx={{
-                  mt: {xs:0, sm: 1.5},
+                  mt: { xs: 0, sm: 1.5 },
                   order: { xs: 1, sm: "unset" },
                   maxWidth: { xs: "100%", md: "470px" },
                 }}
@@ -170,15 +170,22 @@ const Index: FunctionComponent<Props> = () => {
               <SummaryList />
             </Grid>
           )}
-          {IsSm  ? (
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ mt: 3 }}
-              
-            >
-              {t("Print")}
-            </Button>
+          {IsSm ? (
+            <>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center" 
+                sx={{ width: "100%"  , color:"primary.main" , mt:1.5 }}
+              >
+                <Typography variant="h3">{t("Total")}</Typography>
+                <Typography variant="h3">1700.00 EGP</Typography>
+              </Stack>
+
+              <Button variant="contained" fullWidth sx={{ mt: 1.5 }}>
+                {t("Print")}
+              </Button>
+            </>
           ) : (
             ""
           )}

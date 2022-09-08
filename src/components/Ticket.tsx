@@ -1,18 +1,21 @@
 import { Stack, Typography } from "@mui/material";
 import { FunctionComponent, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import TicketImg from "assets/images/ticket.svg";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
-import { FlashOnRounded } from "@mui/icons-material";
+import { useAppDispatch } from "utils/hooks/useStore";
 
+import TicketImg from "assets/images/ticket.svg";
+import { addTicketToSummary } from "store/ticketsSlice";
 interface Props {
   title: string;
   price: number;
   isSummary?: boolean;
+  id: number;
 }
-const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
+const Ticket: FunctionComponent<Props> = ({ title, isSummary, price, id }) => {
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(false);
+  const dispatch = useAppDispatch()
   const [color, setColor] = useState("#E2E23B");
   const IsSm = IsScreenIn_sm();
 
@@ -41,20 +44,21 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
     setTimeout(() => {
       setIsSelected(false);
     }, 1000);
+    dispatch(addTicketToSummary(id))
   };
 
   return (
     <Stack
       onClick={() => AddTicket()}
       sx={{
-        mb: { xs: "4px", sm: 1.5 },
-        mr: { xs: "4px", sm: 1.5 },
+        mb: { xs: "8px", sm: 1.5 },
+        mr: { xs: "0", sm: 1.5 },
         backgroundColor: color,
         cursor: isSummary ? "unset" : "pointer",
         py: 2,
         px: 1,
-        width: isSummary ? "70px" : { xs: "85px", sm: "118px" },
-        height: isSummary ? "70px" : { xs: "85px", sm: "118px" },
+        width: isSummary ? "70px" : { xs: "80px", sm: "118px" },
+        height: isSummary ? "70px" : { xs: "80px", sm: "118px" },
         borderRadius: "8px",
         color: "body.light",
         border: isSelected && !isSummary ? "2px solid " : "unset",
@@ -69,16 +73,17 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price }) => {
       <img
         src={TicketImg}
         alt={title}
-        width={isSummary ? "30px" : IsSm ? "30px" : "50px"}
+        width={isSummary ? "30px" : IsSm ? "25px" : "50px"}
       />
       <Typography
         variant={isSummary ? "overline" : "body1"}
         sx={{
           textAlign: "center",
           mt: { xs: "0 !important", sm: "12px" },
+          fontSize: { xs: "14px !important", sm: "inherit" },
         }}
       >
-        {title}
+        {t(title)}
       </Typography>
     </Stack>
   );

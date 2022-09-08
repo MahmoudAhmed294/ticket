@@ -1,11 +1,14 @@
 import { Box, Typography, Stack, Divider, Button } from "@mui/material";
-import { ticketsData } from "data/tikcet";
 import { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
+import { getSummary ,getTotal} from "store/ticketsSlice";
+import { useAppSelector } from "utils/hooks/useStore";
 import SummaryItem from "./SummaryItem";
 interface Props {}
 const SummaryList: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
+  const SummaryList = useAppSelector(getSummary)
+  const Total = useAppSelector(getTotal)
 
   return (
     <Stack
@@ -39,8 +42,8 @@ const SummaryList: FunctionComponent<Props> = () => {
             },
           }}
         >
-          {ticketsData.map(({ title, price, id }) => (
-            <SummaryItem key={id} title={title} price={price} />
+          {SummaryList.map(({ title, price, id }) => (
+            <SummaryItem key={id} title={title} price={price} id={id} />
           ))}
         </Stack>
       </Box>
@@ -60,7 +63,7 @@ const SummaryList: FunctionComponent<Props> = () => {
           alignItems="center"
         >
           <Typography variant="h3">{t("Total")}</Typography>
-          <Typography variant="h3">1700.00 EGP</Typography>
+          <Typography variant="h3">{Total}.00 EGP</Typography>
         </Stack>
         <Stack
           direction="row"

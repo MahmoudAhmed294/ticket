@@ -30,7 +30,6 @@ const NavBar: FunctionComponent<Props> = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  useEffect(() => {}, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -55,8 +54,12 @@ const NavBar: FunctionComponent<Props> = () => {
                 <Typography variant={IsSm ? "h6" : "h4"}>
                   Ahmed Khaled
                 </Typography>
-                <Typography variant={IsSm ? "caption" : "h4"}>5 Sep 2022</Typography>
-                <Typography variant={IsSm ? "caption" : "h4"}>Gate 2</Typography>
+                <Typography variant={IsSm ? "caption" : "h4"}>
+                  5 Sep 2022
+                </Typography>
+                <Typography variant={IsSm ? "caption" : "h4"}>
+                  Gate 2
+                </Typography>
               </Stack>
             ) : (
               <Stack
@@ -67,9 +70,9 @@ const NavBar: FunctionComponent<Props> = () => {
               >
                 <Stack direction="row" spacing={2}>
                   <img src={ticket} alt="ticket" />
-                  <Typography variant="h1">Tickets</Typography>
+                  <Typography variant="h1">{t("Tickets")}</Typography>
                 </Stack>
-                <Typography variant="h4">Gate B-Gate 2</Typography>
+                <Typography variant="h4"> {t("Gate B-Gate 2")}</Typography>
                 <div>
                   <Button
                     id="basic-button"

@@ -7,17 +7,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 interface Props {
   title: string;
   price: number;
+  id:number
 }
-const SummaryItem: FunctionComponent<Props> = ({ title, price }) => {
+const SummaryItem: FunctionComponent<Props> = ({ title, price , id}) => {
   const { t } = useTranslation();
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="top">
       <Stack direction="row" justifyContent="start" alignItems="top">
-        <Ticket price={price} isSummary title={title} />
+        <Ticket price={price} isSummary title={title} id={id} />
         <Box>
           <Typography variant="body1">
-            {"1 Ticket "} - {title}
+           1 {t('Ticket')} - {title}
           </Typography>
           <Typography variant="subtitle1">{price}.00 EGP</Typography>
         </Box>

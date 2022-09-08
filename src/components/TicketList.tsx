@@ -1,5 +1,5 @@
 import Stack from "@mui/material/Stack"
-import { ticketsData } from "data/tikcet";
+import { ticketsData } from "data/ticket";
 import React ,{FunctionComponent} from 'react'      
 import { useTranslation } from 'react-i18next';      
 import Ticket from "./Ticket";
@@ -13,10 +13,10 @@ const TicketList :FunctionComponent<Props> = () => {
     direction="row"
     alignItems="center"
     flexWrap={"wrap"}
-    sx={{ justifyContent: { xs: "center", sm: "start" } }}
+    sx={{ justifyContent: { xs: "space-between", sm: "start" } }}
   >
     {ticketsData.map(({ title, price, id }) => (
-      <Ticket title={title} price={price} key={id} />
+      <Ticket title={title} price={price} key={id}  id={id}/>
     ))}
   </Stack>
 )
