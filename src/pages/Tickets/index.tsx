@@ -1,4 +1,3 @@
-import { KeyboardArrowLeft } from "@mui/icons-material";
 import {
   Box,
   Grid,
@@ -11,7 +10,7 @@ import {
   Stack,
   Divider,
   Button,
-  IconButton,
+  Autocomplete,
 } from "@mui/material";
 import NavBar from "components/NavBar";
 import SummaryList from "components/SummaryList";
@@ -22,6 +21,14 @@ import { getTotal } from "store/ticketsSlice";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
 import { useAppSelector } from "utils/hooks/useStore";
 interface Props {}
+
+const top100Films = [
+  { label: "Gate A-Gate 2" },
+  { label: "Gate A-Gate 1" },
+  { label: "Gate B-Gate 2" },
+  { label: "Gate B-Gate 1" },
+];
+
 const Index: FunctionComponent<Props> = () => {
   const [radioValue, setRadioValue] = useState("Cash");
   const handleChangeRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,8 +38,7 @@ const Index: FunctionComponent<Props> = () => {
   // const [summaryList, setSummaryList] = useState(false);
   const { t } = useTranslation();
   const IsSm = IsScreenIn_sm();
-  const Total = useAppSelector(getTotal)
-
+  const Total = useAppSelector(getTotal);
 
   return (
     <Box>
@@ -50,12 +56,31 @@ const Index: FunctionComponent<Props> = () => {
         >
           <Grid item md={7} xs={12}>
             <Stack direction="column" sx={{ mt: { xs: 1, sm: 0 } }}>
+              <Box
+                sx={{
+                  mt: { xs: 0, sm: 1.5 },
+                  maxWidth: { xs: "100%", md: "470px" },
+                  order: { xs: 3, sm: "unset" },
+                }}
+              >
+                <Typography variant="h4">{t("1. Select Gate")}</Typography>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={top100Films}
+                  sx={{ width: "100%" }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Gate" />
+                  )}
+                />
+              </Box>
+
               <Stack
                 direction="column"
-                sx={{ mt: { xs: 1, sm: 3 }, order: { xs: 3, sm: "unset" } }}
+                sx={{ mt: { xs: 1, sm: 1 }, order: { xs: 3, sm: "unset" } }}
               >
                 <Typography variant="h4">
-                  {t("1. Choose Payment method")}
+                  {t("2. Choose Payment method")}
                 </Typography>
                 <RadioGroup
                   row
@@ -88,13 +113,13 @@ const Index: FunctionComponent<Props> = () => {
 
               <Box
                 sx={{
-                  mt: { xs: 0, sm: 4 },
+                  mt: { xs: 0, sm: 1 },
                   maxWidth: { xs: "100%", md: "470px" },
                   order: { xs: 3, sm: "unset" },
                 }}
               >
                 <>
-                  <Typography variant="h4">{t("2. Enter card ID")}</Typography>
+                  <Typography variant="h4">{t("3. Enter card ID")}</Typography>
                   <TextField
                     variant="outlined"
                     label="Card ID"
@@ -131,7 +156,7 @@ const Index: FunctionComponent<Props> = () => {
             {IsSm ? (
               ""
             ) : (
-              <Divider sx={{ borderColor: "primary.main", my: 3 }} />
+              <Divider sx={{ borderColor: "primary.main", my: 1 }} />
             )}
             <Box>
               <Typography
@@ -151,7 +176,7 @@ const Index: FunctionComponent<Props> = () => {
                     <KeyboardArrowLeft />
                   </IconButton>
                 )} */}
-                {t("3. Choose your ticket")}
+                {t("4. Choose your ticket")}
               </Typography>
               {/* <SummaryList /> */}
               <TicketList />
@@ -179,8 +204,8 @@ const Index: FunctionComponent<Props> = () => {
               <Stack
                 direction="row"
                 justifyContent="space-between"
-                alignItems="center" 
-                sx={{ width: "100%"  , color:"primary.main" , mt:1.5 }}
+                alignItems="center"
+                sx={{ width: "100%", color: "primary.main", mt: 1.5 }}
               >
                 <Typography variant="h3">{t("Total")}</Typography>
                 <Typography variant="h3">{Total}.00 EGP</Typography>
