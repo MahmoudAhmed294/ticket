@@ -14,7 +14,7 @@ import palette from "./palette";
 import typography from "./typography";
 import { useAppSelector } from "utils/hooks/useStore";
 import { getDir } from "store/languageSlice";
-import { container, button, input } from "./components";
+import { container, button, input ,label ,autocomplete } from "./components";
 
 type Props = {
   children: React.ReactNode;
@@ -37,6 +37,8 @@ export default function ThemeProvider({ children }: Props) {
         ...container,
         ...button,
         ...input,
+        ...label,
+        ...autocomplete
       },
       shape: { borderRadius: 4 },
     });

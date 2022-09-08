@@ -63,7 +63,7 @@ const Index: FunctionComponent<Props> = () => {
                   order: { xs: 3, sm: "unset" },
                 }}
               >
-                <Typography variant="h4">{t("1. Select Gate")}</Typography>
+                <Typography variant="h4" sx={{mb:1}}>{t("1. Select Gate")}</Typography>
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
@@ -77,7 +77,7 @@ const Index: FunctionComponent<Props> = () => {
 
               <Stack
                 direction="column"
-                sx={{ mt: { xs: 1, sm: 1 }, order: { xs: 3, sm: "unset" } }}
+                sx={{ mt: { xs: 1, sm: 1.5 }, order: { xs: 3, sm: "unset" } }}
               >
                 <Typography variant="h4">
                   {t("2. Choose Payment method")}
@@ -92,19 +92,19 @@ const Index: FunctionComponent<Props> = () => {
                 >
                   <FormControlLabel
                     value="Cash"
-                    control={<Radio sx={{ color: "body.main" }} />}
+                    control={<Radio sx={{ color: "body.main" , padding:"0 8px" }} />}
                     label="Cash"
                     sx={{ mr: { xs: 1, sm: 5 } }}
                   />
                   <FormControlLabel
                     value="Card"
-                    control={<Radio sx={{ color: "body.main" }} />}
+                    control={<Radio sx={{ color: "body.main" , padding:"0 8px" }} />}
                     label="Card"
                     sx={{ mr: { xs: 1, sm: 5 } }}
                   />
                   <FormControlLabel
                     value="Visa"
-                    control={<Radio sx={{ color: "body.main" }} />}
+                    control={<Radio sx={{ color: "body.main" , padding:"0 8px" }} />}
                     label="Visa"
                     sx={{ mr: { xs: 1, sm: 5 } }}
                   />
@@ -113,7 +113,7 @@ const Index: FunctionComponent<Props> = () => {
 
               <Box
                 sx={{
-                  mt: { xs: 0, sm: 1 },
+                  mt: { xs: 0, sm: 1.5 },
                   maxWidth: { xs: "100%", md: "470px" },
                   order: { xs: 3, sm: "unset" },
                 }}
@@ -123,7 +123,7 @@ const Index: FunctionComponent<Props> = () => {
                   <TextField
                     variant="outlined"
                     label="Card ID"
-                    sx={{ mt: 1.5 }}
+                    sx={{ mt: 1 }}
                     fullWidth
                   />
                 </>
@@ -134,7 +134,7 @@ const Index: FunctionComponent<Props> = () => {
                 justifyContent="space-between"
                 flexWrap="wrap"
                 sx={{
-                  mt: { xs: 0, sm: 1.5 },
+                  mt: { xs: 0, sm: 1 },
                   order: { xs: 1, sm: "unset" },
                   maxWidth: { xs: "100%", md: "470px" },
                 }}
