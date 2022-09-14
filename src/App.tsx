@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { Box } from "@mui/material";
 
 import "style/globals.css";
@@ -8,35 +13,50 @@ import Login from "pages/auth/Login";
 import Tickets from "pages/Tickets";
 import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
-import { useAppDispatch } from "utils/hooks/useStore";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
+import { useAuth } from "utils/hooks/useIsAuthPages";
+import { checkToken, getStatus, getTickets,getAllTickets, getUser } from "store/ticketsSlice";
 
 function App() {
+  let auth = useAuth();
   const [isLoaded, setIsLoaded] = useState(true);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
+  const USER = useAppSelector(getUser);
+  const ticket = useAppSelector(getAllTickets);
+  const IsLoading = useAppSelector(getStatus);
 
   useEffect(() => {
+    dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
 
-    setTimeout(() => {
-      setIsLoaded(false);
-    }, 2000);
-      dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  
-    
+    setIsLoaded(false);
+    if (IsLoading === "failed" || !USER) {
+      dispatch(checkToken());      
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (USER && ticket.length === 0) {
+      dispatch(getTickets(USER?.GateID));
+    }
+  }, [USER ,dispatch ,ticket]);
+  
   return (
     <Box>
-      {isLoaded ? (
+      {isLoaded || IsLoading === "loading" ? (
         <Loading />
       ) : (
-        <BrowserRouter>
+        <Router>
           <Routes>
-            <Route path="/"  element={<Login />} />
-            <Route path="/home" element={<Tickets />} />
+            <Route
+              element={auth ? <Tickets /> : <Navigate to="/login" />}
+              path="/"
+            />
+
+            <Route path="/login" element={<Login />} />
           </Routes>
-        </BrowserRouter>
+        </Router>
       )}
     </Box>
   );

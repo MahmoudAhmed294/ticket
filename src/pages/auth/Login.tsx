@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { getLanguage, toggleLanguage } from "store/languageSlice";
@@ -20,14 +20,17 @@ import loginBg from "assets/images/loginbg.jpg";
 import logo from "assets/images/logoBlue.svg";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useTranslation } from "react-i18next";
+import { getLogin } from "store/ticketsSlice";
+import { useAuth } from "utils/hooks/useIsAuthPages";
 
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ userName: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const language = useAppSelector(getLanguage);
   const dispatch = useAppDispatch();
+  const auth = useAuth();
 
   const changeLanguage = () => {
     switch (language) {
@@ -43,6 +46,17 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (auth) {
+      navigate("/");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth]);
+
+  const handleLogin = (e: React.SyntheticEvent<EventTarget>) => {
+    e.preventDefault();
+    dispatch(getLogin(form));
+  };
   return (
     <Grid container sx={{ height: "100vh" }} alignItems="center">
       <Grid item sx={{ display: { xs: "none", md: "flex" } }} md={6}>
@@ -89,15 +103,23 @@ const Login = () => {
           <Typography variant="h2" sx={{ width: { xs: "100%", md: "70%" } }}>
             {t("Enter your ID number associated with your account")}
           </Typography>
-          <Stack direction="column" alignItems="center" justifyContent="center">
+          <Stack
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            component="form"
+            onSubmit={handleLogin}
+          >
             <TextField
-              label={t('Username or Email')}
+              label={t("Username or Email")}
               variant="outlined"
+              value={form.userName}
+              onChange={(e) => setForm({ ...form, userName: e.target.value })}
               fullWidth
               sx={{ mb: 3 }}
             />
             <FormControl variant="outlined" fullWidth sx={{ mb: 1 }}>
-              <InputLabel>                {t("Password")}</InputLabel>
+              <InputLabel> {t("Password")}</InputLabel>
               <OutlinedInput
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -118,14 +140,14 @@ const Login = () => {
               />
             </FormControl>
             <Link href="#" underline="none" alignSelf="end">
-             {t(' Forgot password?')}
+              {t(" Forgot password?")}
             </Link>
             <Button
               variant="contained"
               fullWidth
-              onClick={() => navigate("/home")}
               sx={{ mt: 2 }}
               size="large"
+              type="submit"
             >
               {t("Login")}
             </Button>

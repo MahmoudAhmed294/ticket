@@ -5,8 +5,10 @@ import ticketsSlice from "./ticketsSlice";
 export const store = configureStore({
   reducer: {
     language: languageSlice,
-    tickets:ticketsSlice
+    tickets:ticketsSlice,
+
   },
+
 });
 
 export type AppDispatch = typeof store.dispatch;

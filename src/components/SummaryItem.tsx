@@ -10,15 +10,17 @@ interface Props {
   title: string;
   price: number;
   id: number;
+  listId: number;
 }
-const SummaryItem: FunctionComponent<Props> = ({ title, price, id }) => {
+const SummaryItem: FunctionComponent<Props> = ({ title, price, id ,listId }) => {
+
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="top">
       <Stack direction="row" justifyContent="start" alignItems="top">
-        <Ticket price={price} isSummary title={title} id={id} />
+        <Ticket  isSummary title={title} id={id} />
         <Box>
           <Typography variant="body1">
             1 {t("Ticket")} - {title}
@@ -28,7 +30,7 @@ const SummaryItem: FunctionComponent<Props> = ({ title, price, id }) => {
       </Stack>
       <IconButton
         sx={{ alignItems: "flex-start", height: "fit-content" }}
-        onClick={() => dispatch(deleteTicketFromSummary(id))}
+        onClick={() => dispatch(deleteTicketFromSummary(listId))}
       >
         <DeleteIcon sx={{ color: "error.main" }} />
       </IconButton>

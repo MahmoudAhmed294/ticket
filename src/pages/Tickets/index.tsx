@@ -17,7 +17,7 @@ import SummaryList from "components/SummaryList";
 import TicketList from "components/TicketList";
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getTotal } from "store/ticketsSlice";
+import { getAllTickets, getTotal } from "store/ticketsSlice";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
 import { useAppSelector } from "utils/hooks/useStore";
 interface Props {}

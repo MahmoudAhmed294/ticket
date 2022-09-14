@@ -8,11 +8,10 @@ import TicketImg from "assets/images/ticket.svg";
 import { addTicketToSummary } from "store/ticketsSlice";
 interface Props {
   title: string;
-  price: number;
   isSummary?: boolean;
   id: number;
 }
-const Ticket: FunctionComponent<Props> = ({ title, isSummary, price, id }) => {
+const Ticket: FunctionComponent<Props> = ({ title, isSummary, id  }) => {
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(false);
   const dispatch = useAppDispatch()
@@ -24,13 +23,13 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, price, id }) => {
       case "Regular":
         setColor("#E2E23B");
         break;
-      case "VIP":
+      case "vip":
         setColor("#41CA32");
         break;
       case "Children":
         setColor("#E79D2F");
         break;
-      case "Super VIP":
+      case "weekEnd":
         setColor("#4AABE2");
         break;
       case "Cat":
