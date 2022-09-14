@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const Api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://tk-api-backend.herokuapp.com",
   withCredentials: true,
   headers: {
     "Access-Control-Allow-Origin": "*",
