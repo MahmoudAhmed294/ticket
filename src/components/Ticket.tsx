@@ -11,10 +11,10 @@ interface Props {
   isSummary?: boolean;
   id: number;
 }
-const Ticket: FunctionComponent<Props> = ({ title, isSummary, id  }) => {
+const Ticket: FunctionComponent<Props> = ({ title, isSummary, id }) => {
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(false);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [color, setColor] = useState("#E2E23B");
   const IsSm = IsScreenIn_sm();
 
@@ -43,12 +43,12 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, id  }) => {
     setTimeout(() => {
       setIsSelected(false);
     }, 1000);
-    dispatch(addTicketToSummary(id))
+    dispatch(addTicketToSummary({ id }));
   };
 
   return (
     <Stack
-      onClick={() => AddTicket()}
+      onClick={() => (!isSummary ? AddTicket() : "")}
       sx={{
         mb: { xs: "8px", sm: 1.5 },
         mr: { xs: "0", sm: 1.5 },

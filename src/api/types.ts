@@ -1,7 +1,7 @@
 
 export type LoginResponse = {
   ID:number;
-  GateID:number;
+  GateID: number ;
   UserName:string;
 
 };
@@ -16,6 +16,19 @@ export type ticket = {
   Name:string;
   Amount:number;
   Tax:number;
+  quantity:number;
   
   }
   
+export type Card = {
+  ID:number;
+  MemberID:number;
+  Balance:number;
+  IsPrinted:boolean
+  }
+export type Member = {
+  ID:number;
+  Name:string;
+  }
+  
+

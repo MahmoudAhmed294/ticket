@@ -1,15 +1,15 @@
 import { Box, Typography, Stack, Divider, Button } from "@mui/material";
 import { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
-import { getSummary ,getTax,getTotal} from "store/ticketsSlice";
+import { getSummary, getTax, getTotal } from "store/ticketsSlice";
 import { useAppSelector } from "utils/hooks/useStore";
 import SummaryItem from "./SummaryItem";
 interface Props {}
 const SummaryList: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
-  const SummaryList = useAppSelector(getSummary)
-  const Total = useAppSelector(getTotal)
-  const Tax = useAppSelector(getTax)
+  const SummaryList = useAppSelector(getSummary);
+  const Total = useAppSelector(getTotal);
+  const Tax = useAppSelector(getTax);
 
   return (
     <Stack
@@ -17,7 +17,7 @@ const SummaryList: FunctionComponent<Props> = () => {
       justifyContent="space-between"
       sx={{ height: "100%" }}
     >
-      <Box sx={{ pl: {xs:0 , sm:4}, pt: {sm:3} }}>
+      <Box sx={{ pl: { xs: 0, sm: 4 }, pt: { sm: 3 } }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           {t("Summary")}
         </Typography>
@@ -43,9 +43,13 @@ const SummaryList: FunctionComponent<Props> = () => {
             },
           }}
         >
-          {SummaryList.map(({ Name, Amount, ID } , index) => (
-            <SummaryItem key={Math.random() *5} title={Name} price={Amount} id={ID} listId={index}/>
-          ))}
+          {SummaryList.map(({ Name, Amount, ID, quantity }: any) =>
+            quantity > 0 ? (
+              <SummaryItem key={ID} title={Name} price={Amount} id={ID} />
+            ) : (
+              ""
+            )
+          )}
         </Stack>
       </Box>
       <Divider sx={{ borderColor: "primary.main", my: 2 }} />

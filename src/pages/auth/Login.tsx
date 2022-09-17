@@ -20,7 +20,7 @@ import loginBg from "assets/images/loginbg.jpg";
 import logo from "assets/images/logoBlue.svg";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useTranslation } from "react-i18next";
-import { getLogin } from "store/ticketsSlice";
+import { getLogin } from "api/Api";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 
 const Login = () => {

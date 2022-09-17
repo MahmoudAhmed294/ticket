@@ -11,7 +11,17 @@ const Loading: FunctionComponent<Props> = () => {
       direction="row"
       justifyContent="center"
       alignItems="center"
-      sx={{ backgroundColor: "primary.main", height: "100vh", width: "100vw" }}
+      sx={{
+        backgroundColor: "primary.main",
+        height: "100vh",
+        width: "100vw",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex:1000
+      }}
     >
       <img src={Logo} alt="logo" />
     </Stack>

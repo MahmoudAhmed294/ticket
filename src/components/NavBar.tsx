@@ -9,6 +9,7 @@ import {
   MenuItem,
   Menu,
   Avatar,
+  CircularProgress,
 } from "@mui/material";
 import { FunctionComponent, useState, MouseEvent, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,10 +17,22 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ticket from "assets/images/ticket.svg";
 import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
+import { getGateName } from "api/Api";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
+import { getAllTickets, getStatus, getGate ,getGateID  } from "store/ticketsSlice";
+import { useAuth } from "utils/hooks/useIsAuthPages";
 
 interface Props {}
 const NavBar: FunctionComponent<Props> = () => {
+
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const user = useAuth();
+  const tickets = useAppSelector(getAllTickets);
+  const Isloading = useAppSelector(getStatus);
+  const GateName = useAppSelector(getGate);
+  const GateID:any = useAppSelector(getGateID);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -30,6 +43,12 @@ const NavBar: FunctionComponent<Props> = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  useEffect(() => {
+    if(tickets.length !== 0 && user){
+
+      dispatch(getGateName(GateID));
+    }
+  }, [tickets]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -72,7 +91,26 @@ const NavBar: FunctionComponent<Props> = () => {
                   <img src={ticket} alt="ticket" />
                   <Typography variant="h1">{t("Tickets")}</Typography>
                 </Stack>
-                <Typography variant="h4"> {t("Gate B-Gate 2")}</Typography>
+                {Isloading === "loading" ? (
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ color: "body.light" }}
+                    spacing={1}
+                  >
+                    <Typography variant="h4">{t("Loading")}</Typography>
+                    <CircularProgress
+                      color="inherit"
+                      sx={{
+                        height: "26px !important",
+                        width: "26px !important",
+                      }}
+                    />
+                  </Stack>
+                ) : (
+                  <Typography variant="h4"> {GateName}</Typography>
+                )}
                 <div>
                   <Button
                     id="basic-button"
@@ -88,7 +126,7 @@ const NavBar: FunctionComponent<Props> = () => {
                       sx={{ color: "body.light" }}
                     >
                       <Avatar alt="Mahmoud" />
-                      <Typography variant="body2">Administrator</Typography>
+                      <Typography variant="body2">{user?.UserName}</Typography>
                       <KeyboardArrowDownIcon />
                     </Stack>
                   </Button>

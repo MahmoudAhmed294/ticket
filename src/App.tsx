@@ -15,7 +15,9 @@ import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { useAuth } from "utils/hooks/useIsAuthPages";
-import { checkToken, getStatus, getTickets,getAllTickets, getUser } from "store/ticketsSlice";
+import {  getStatus,getAllTickets, getUser } from "store/ticketsSlice";
+import { getTickets ,checkToken } from "api/Api";
+import Bill from "components/Bill";
 
 function App() {
   let auth = useAuth();
@@ -58,8 +60,20 @@ function App() {
           </Routes>
         </Router>
       )}
+
     </Box>
   );
 }
 
 export default App;
+
+
+/* 
+TODO ticket api handle repeated 
+TODO reduce  redux slice 
+TODO loader in name and balance 
+TODO make radio as  taps
+TODO 
+
+
+*/

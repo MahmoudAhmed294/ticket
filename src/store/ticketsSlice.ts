@@ -1,13 +1,12 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Api from "api";
-
-import { ticket, LoginResponse, LoginInput } from "api/types";
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { checkToken, getTickets, getLogin , getGateName } from "api/Api";
+import { ticket, LoginResponse  } from "api/types";
 import { RootState } from "./store";
 
 export interface TicketsState {
   status: "idle" | "loading" | "failed";
   Summary: ticket[];
+  allSummary: ticket[] | any;
   total: number;
   Tax: number;
   gate: string;
@@ -17,6 +16,7 @@ export interface TicketsState {
 
 const initialState: TicketsState = {
   status: "failed",
+  allSummary: [],
   Summary: [],
   total: 0,
   Tax: 0,
@@ -25,87 +25,60 @@ const initialState: TicketsState = {
   tickets: [],
 };
 
-export const getLogin = createAsyncThunk(
-  "api/login",
-  async (form: LoginInput) => {
-    const response = await Api({
-      url: "/login",
-      method: "POST",
-      data: form,
-    });
-
-    return response.data;
-  }
-);
-export const checkToken = createAsyncThunk("api/checkToken", async () => {
-  const response = await Api({
-    url: "/checkToken",
-    method: "get",
-  })
-    .then((res) => {
-      if (res.status === 200) {
-        getTickets(res.data.GateID);
-        return res;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  return response?.data;
-});
-
-export const getTickets = createAsyncThunk(
-  "api/tickets",
-  async (GateID: string | number) => {
-    const response = await Api({
-      url: "/tickets",
-      method: "POST",
-      data: { GateID },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    return response?.data;
-  }
-);
 
 export const ticketsSlice = createSlice({
   name: "tickets",
   initialState,
 
   reducers: {
-    addTicketToSummary: (state, action: PayloadAction<number>) => {
-      const summaryItem = state.tickets.filter(
-        ({ ID }) => ID === action.payload
-      );
-      state.Summary.push(...summaryItem);
-      state.total = state.Summary.map(({ Amount }) => Amount).reduce(
-        (total, num) => total + num
-      );
+    addTicketToSummary: (state, action: PayloadAction<any>) => {
+      if (!state.Summary.some((value) => value.ID === action.payload.id)) {
+        state.Summary = [
+          ...state.Summary,
+          ...state.tickets.filter((item: any) => item.ID === action.payload.id),
+        ];
+      } else {
+        state.Summary = state.Summary.map((ticket: any) =>
+          ticket.ID === action.payload.id
+            ? { ...ticket, quantity: (ticket.quantity += 1) }
+            : ticket
+        );
+      }
+
+      if (state.Summary.length !== 0) {
+        const totalQuantity = state.Summary.map(
+          ({ quantity }) => quantity
+        ).reduce((total, num) => total + num);
+        const totalAmount = state.Summary.map(
+          ({ Amount, quantity }) => Amount
+        ).reduce((total, num) => total + num);
+        state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
+          (total, num) => total + num
+        );
+        state.total = (totalAmount - state.Tax) * totalQuantity;
+      } else {
+        state.total = 0;
+      }
     },
     deleteTicketFromSummary: (state, action: PayloadAction<number>) => {
       state.Summary = state.Summary.filter(
-        (_, index) => index !== action.payload
+        (value, index) => value.ID !== action.payload
       );
 
       if (state.Summary.length !== 0) {
+        const totalQuantity = state.Summary.map(
+          ({ quantity }) => quantity
+        ).reduce((total, num) => total + num);
+
         const totalAmount = state.Summary.map(({ Amount }) => Amount).reduce(
           (total, num) => total + num
         );
         state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
           (total, num) => total + num
         );
-        state.total = totalAmount - state.Tax;
-      }
-      else{
-        state.total = 0
+        state.total = (totalAmount - state.Tax) * totalQuantity;
+      } else {
+        state.total = 0;
       }
     },
   },
@@ -117,12 +90,19 @@ export const ticketsSlice = createSlice({
 
       .addCase(getLogin.fulfilled, (state, action) => {
         state.status = "idle";
-        state.tickets = action.payload?.tickets;
+        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
+          ...ticket,
+          quantity: 1,
+        }));
+        state.tickets = addQuantity;
+
         state.user = { ...action.payload?.user };
       })
       .addCase(getLogin.rejected, (state) => {
         state.status = "failed";
       });
+
+
 
     builder
       .addCase(checkToken.pending, (state) => {
@@ -136,6 +116,8 @@ export const ticketsSlice = createSlice({
       .addCase(checkToken.rejected, (state) => {
         state.status = "failed";
       });
+
+
     builder
       .addCase(getTickets.pending, (state) => {
         state.status = "loading";
@@ -143,9 +125,27 @@ export const ticketsSlice = createSlice({
 
       .addCase(getTickets.fulfilled, (state, action) => {
         state.status = "idle";
-        state.tickets = action.payload?.tickets;
+        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
+          ...ticket,
+          quantity: 1,
+        }));
+        state.tickets = addQuantity;
       })
       .addCase(getTickets.rejected, (state) => {
+        state.status = "failed";
+      });
+
+
+    builder
+      .addCase(getGateName.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getGateName.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.gate = action.payload.Name;
+      })
+      .addCase(getGateName.rejected, (state) => {
         state.status = "failed";
       });
   },
@@ -160,5 +160,7 @@ export const getTotal = (state: RootState) => state.tickets.total;
 export const getTax = (state: RootState) => state.tickets.Tax;
 export const getStatus = (state: RootState) => state.tickets.status;
 export const getAllTickets = (state: RootState) => state.tickets.tickets;
+export const getGateID = (state: RootState) => state.tickets.user?.GateID;
+export const getGate = (state: RootState) => state.tickets.gate;
 
 export default ticketsSlice.reducer;
