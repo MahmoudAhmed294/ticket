@@ -7,18 +7,18 @@ import {
 } from "@mui/material";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getCard } from "api/Api";
-import { useAppSelector } from "utils/hooks/useStore";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import Cash from "./Cash";
 import Card from "./Card";
 import { getSummary } from "store/ticketsSlice";
+import { payMethod } from "store/paymentSlice";
 
 interface Props {}
 const PaymentOptions: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
   const [radioValue, setRadioValue] = useState("Cash");
   const [isTicketSelect, SetIsTicketSelect] = useState(false);
-
+  const dispatch = useAppDispatch();
   const summary = useAppSelector(getSummary);
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const PaymentOptions: FunctionComponent<Props> = () => {
   }, [summary]);
   const handleChangeRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRadioValue((event.target as HTMLInputElement).value);
+    dispatch(payMethod((event.target as HTMLInputElement).value));
   };
   return (
     <Stack direction="column" sx={{ mt: { xs: 1, sm: 0 } }}>
@@ -70,9 +71,9 @@ const PaymentOptions: FunctionComponent<Props> = () => {
         </RadioGroup>
       </Stack>
       {radioValue === "Cash" ? (
-        <Cash />
+        <Cash isTicketSelect={isTicketSelect} />
       ) : radioValue === "Card" ? (
-        <Card />
+        <Card isTicketSelect={isTicketSelect} />
       ) : (
         radioValue === "Visa" && (
           <Typography variant="h2" sx={{ my: 2, color: "primary.main" }}>

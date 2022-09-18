@@ -1,16 +1,41 @@
 import { Box, Typography, Stack, Divider, Button } from "@mui/material";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import ReactToPrint from "react-to-print";
 import { getSummary, getTax, getTotal } from "store/ticketsSlice";
-import { useAppSelector } from "utils/hooks/useStore";
+import { useAppSelector , useAppDispatch } from "utils/hooks/useStore";
+import Bill from "./Bill";
 import SummaryItem from "./SummaryItem";
+import {PostBill} from "api/Api"
 interface Props {}
 const SummaryList: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
   const SummaryList = useAppSelector(getSummary);
   const Total = useAppSelector(getTotal);
   const Tax = useAppSelector(getTax);
+  const payMethod = useAppSelector((state:any) => state.payment.payMethod);
+  const memberID = useAppSelector((state:any) => state.payment.member?.ID);
+  const cardID = useAppSelector((state:any) => state.payment.card?.ID);
+  const userName = useAppSelector((state:any) => state.tickets.user?.UserName);
+  const billNumber = useAppSelector((state:any) => state.payment?.billNumber);
 
+  const componentRef = useRef(null);
+  const dispatch = useAppDispatch()
+
+  const SendBillData =() =>{
+
+    dispatch(PostBill({
+      summary:SummaryList,
+      total:Total,
+      tax:Tax,
+      userName:userName,
+      MemberID:memberID,
+      CardID: cardID,
+      isPrinted:1,
+      paymentMethod:payMethod,
+      BillNumber:billNumber
+    }))
+  }
   return (
     <Stack
       direction="column"
@@ -77,12 +102,22 @@ const SummaryList: FunctionComponent<Props> = () => {
           spacing={2}
           sx={{ my: 2 }}
         >
-          <Button variant="contained" fullWidth>
+          <Button variant="contained" fullWidth >
             {t("Print")}
           </Button>
-          <Button variant="contained" fullWidth>
-            {t("Pay")}
-          </Button>
+          <ReactToPrint
+          
+            trigger={() => (
+              <Button variant="contained" fullWidth disabled={!memberID || SummaryList.length ===0 ? true : false}>
+                {t("Pay")}
+              </Button>
+            )}
+            content={() => componentRef.current}
+            onBeforeGetContent={SendBillData}
+          />
+          <Box ref={componentRef}  className="print-source" >
+          <Bill   />
+          </Box>
         </Stack>
       </Box>
     </Stack>

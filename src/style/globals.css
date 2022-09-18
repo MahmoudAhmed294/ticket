@@ -27,3 +27,20 @@
   src: local(''), url('../assets/fonts/Cairo-Light.woff') format('woff');
 }
 
+.print-source {
+  display: none;
+}
+
+body > .print-source {
+  display: block;
+}
+
+@media print {
+  .print-source {
+    display: block;
+    page-break-before: auto;
+    size: 5mm
+  }
+
+  
+}

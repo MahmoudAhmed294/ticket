@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { checkToken, getTickets, getLogin , getGateName } from "api/Api";
+import { checkToken, getTickets, getLogin , getGateName, PostBill } from "api/Api";
 import { ticket, LoginResponse  } from "api/types";
 import { RootState } from "./store";
 
 export interface TicketsState {
   status: "idle" | "loading" | "failed";
   Summary: ticket[];
-  allSummary: ticket[] | any;
   total: number;
   Tax: number;
   gate: string;
@@ -16,7 +15,6 @@ export interface TicketsState {
 
 const initialState: TicketsState = {
   status: "failed",
-  allSummary: [],
   Summary: [],
   total: 0,
   Tax: 0,
@@ -148,6 +146,14 @@ export const ticketsSlice = createSlice({
       .addCase(getGateName.rejected, (state) => {
         state.status = "failed";
       });
+      builder
+      .addCase(PostBill.fulfilled, (state, action) => {
+        state.Summary = []
+        state.total = 0
+        state.Tax = 0
+      
+      })
+
   },
 });
 

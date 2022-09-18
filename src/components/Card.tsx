@@ -5,14 +5,16 @@ import {
   Stack,
   CircularProgress,
 } from "@mui/material";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getCard } from "api/Api";
 import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 
-interface Props {}
-const Card: FunctionComponent<Props> = () => {
+interface Props {
+  isTicketSelect: boolean;
+}
+const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
   const { t } = useTranslation();
   const IsLoading = useAppSelector(getStatus);
   const card = useAppSelector(getCardInfo);
@@ -26,6 +28,11 @@ const Card: FunctionComponent<Props> = () => {
       dispatch(getCard(e.target.value));
     }
   };
+  useEffect(() => {
+    if (!isTicketSelect) {
+      setSearchValue("");
+    }
+  }, [isTicketSelect]);
 
   return (
     <div>
@@ -46,6 +53,7 @@ const Card: FunctionComponent<Props> = () => {
             type="text"
             value={searchValue}
             onChange={SearchAPi}
+            disabled={isTicketSelect}
           />
         </>
       </Box>

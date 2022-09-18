@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "api";
-import { LoginInput } from "./types";
+import { LoginInput , Bill } from "./types";
 
 export const getLogin = createAsyncThunk(
   "api/login",
@@ -26,7 +26,7 @@ export const checkToken = createAsyncThunk("api/checkToken", async () => {
     })
     .catch((res) => {
       console.log(res);
-      return res
+      return res;
     });
 
   return response?.data;
@@ -52,49 +52,42 @@ export const getTickets = createAsyncThunk(
     return response?.data;
   }
 );
-export const getGateName = createAsyncThunk(
-  "api/gate",
-  async (GateID: any) => {
-    if (GateID) {
-      const response = await Api({
-        url: `/gates/${GateID}`,
-        method: "get",
+export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
+  if (GateID) {
+    const response = await Api({
+      url: `/gates/${GateID}`,
+      method: "get",
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
       })
-        .then((res) => {
-          if (res.status === 200) {
-            
-            return res;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      .catch((err) => {
+        console.log(err);
+      });
 
-      return response?.data;
-    } 
+    return response?.data;
   }
-);
-export const getCard = createAsyncThunk(
-  "api/card",
-  async (CardID: string) => {
-    if (CardID) {
-      const response = await Api({
-        url: `cards/${CardID}`,
-        method: "get",
+});
+export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
+  if (CardID) {
+    const response = await Api({
+      url: `cards/${CardID}`,
+      method: "get",
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
       })
-        .then((res) => {
-          if (res.status === 200) {
-            return res;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      .catch((err) => {
+        console.log(err);
+      });
 
-      return response?.data;
-    } 
+    return response?.data;
   }
-);
+});
 export const getMember = createAsyncThunk(
   "api/member",
   async (CardID: string) => {
@@ -114,6 +107,29 @@ export const getMember = createAsyncThunk(
         });
 
       return response?.data;
-    } 
+    }
+  }
+);
+
+export const PostBill = createAsyncThunk(
+  "api/payment",
+  async (data: Bill) => {
+    if (data) {
+      const response = await Api({
+        url: 'bill',
+        method: "post",
+        data:data
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            return res;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      return response;
+    }
   }
 );
