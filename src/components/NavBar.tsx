@@ -44,7 +44,7 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if(tickets.length !== 0 && user){
+    if(tickets.length > 0 && user){
 
       dispatch(getGateName(GateID));
     }
