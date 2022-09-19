@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { FunctionComponent, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
-import { useAppDispatch } from "utils/hooks/useStore";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 
 import TicketImg from "assets/images/ticket.svg";
 import { addTicketToSummary } from "store/ticketsSlice";
@@ -14,8 +14,9 @@ interface Props {
 const Ticket: FunctionComponent<Props> = ({ title, isSummary, id }) => {
   const { t } = useTranslation();
   const [isSelected, setIsSelected] = useState(false);
-  const dispatch = useAppDispatch();
   const [color, setColor] = useState("#E2E23B");
+  const dispatch = useAppDispatch();
+  const member = useAppSelector((state: any) => state.payment.member);
   const IsSm = IsScreenIn_sm();
 
   useEffect(() => {
@@ -39,11 +40,13 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, id }) => {
   }, []);
 
   const AddTicket = () => {
-    setIsSelected(true);
-    setTimeout(() => {
-      setIsSelected(false);
-    }, 1000);
-    dispatch(addTicketToSummary({ id }));
+    if (member) {
+      setIsSelected(true);
+      setTimeout(() => {
+        setIsSelected(false);
+      }, 1000);
+      dispatch(addTicketToSummary({ id }));
+    }
   };
 
   return (

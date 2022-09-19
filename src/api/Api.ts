@@ -93,8 +93,6 @@ export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
     })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
-          
           return res;
         }
       })
@@ -137,14 +135,6 @@ export const PostBill = createAsyncThunk(
         method: "post",
         data:data
       })
-        .then((res) => {
-          if (res.status === 200) {
-            return res;
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
 
       return response;
     }
