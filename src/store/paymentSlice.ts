@@ -74,7 +74,7 @@ export const paymentSlice = createSlice({
   },
 });
 
-export const { payMethod } = paymentSlice.actions;
+export const { payMethod ,reset} = paymentSlice.actions;
 
 export const getStatus = (state: RootState) => state.payment.status;
 export const getCardInfo = (state: RootState) => state.payment.card;

@@ -24,6 +24,7 @@ import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useTranslation } from "react-i18next";
 import { getLogin } from "api/Api";
 import { useAuth } from "utils/hooks/useIsAuthPages";
+import { getValidate } from "store/ticketsSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Login = () => {
   const [form, setForm] = useState({ userName: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const language = useAppSelector(getLanguage);
+  const validate = useAppSelector(getValidate);
   const dispatch = useAppDispatch();
   const auth = useAuth();
 
@@ -60,9 +62,9 @@ const Login = () => {
     dispatch(getLogin(form));
   };
   const handleClose = () => {
-    setState(false);
+    setOpenAlert(false);
   };
-  const [state, setState] = useState(true);
+  const [openAlert, setOpenAlert] = useState(true);
 
   return (
     <Grid container sx={{ height: "100vh" }} alignItems="center">
@@ -162,7 +164,7 @@ const Login = () => {
         </Stack>
       </Grid>
       <Snackbar
-        open={state}
+        open={validate ?  openAlert : false}
         autoHideDuration={3000}
         onClose={handleClose}
         sx={{
@@ -185,7 +187,7 @@ const Login = () => {
             color: "body.light",
           }}
         >
-          Please check your User name and Password
+          {validate}
         </Alert>
       </Snackbar>
     </Grid>

@@ -17,18 +17,19 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ticket from "assets/images/ticket.svg";
 import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
-import { getGateName } from "api/Api";
+import { getGateName, logout } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getAllTickets, getStatus, getGate ,getGateID  } from "store/ticketsSlice";
+import { getAllTickets, getStatus, getGate ,getGateID , resetAll } from "store/ticketsSlice";
+import { reset } from "store/paymentSlice";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 
 interface Props {}
 const NavBar: FunctionComponent<Props> = () => {
-
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const user = useAuth();
   const tickets = useAppSelector(getAllTickets);
+  const USER = useAppSelector((state:any) => state.tickets?.user);
   const Isloading = useAppSelector(getStatus);
   const GateName = useAppSelector(getGate);
   const GateID:any = useAppSelector(getGateID);
@@ -44,11 +45,19 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if(tickets.length > 0 && user){
+    if(USER && GateName === '') {
 
       dispatch(getGateName(GateID));
     }
-  }, [tickets]);
+  }, [GateName , USER]);
+
+const logoutHandle = () => {
+  dispatch(logout());
+  dispatch(resetAll());
+  dispatch(reset());
+
+
+}
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -158,7 +167,7 @@ const NavBar: FunctionComponent<Props> = () => {
                         <Typography variant="body1">Profile</Typography>
                       </Stack>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={logoutHandle}>
                       <Stack
                         direction="row"
                         alignItems="center"

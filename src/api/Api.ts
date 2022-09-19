@@ -30,6 +30,22 @@ export const checkToken = createAsyncThunk("api/checkToken", async () => {
 
   return response?.data;
 });
+export const logout = createAsyncThunk("api/logout", async () => {
+  const response = await Api({
+    url: "/logout",
+    method: "get",
+  })
+    .then((res) => {
+      if (res.status === 200) {
+        return res;
+      }
+    })
+    .catch((res) => {
+      return res;
+    });
+
+  return response?.data;
+});
 
 export const getTickets = createAsyncThunk(
   "api/tickets",

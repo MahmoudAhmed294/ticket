@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { checkToken, getTickets, getLogin , getGateName, PostBill } from "api/Api";
-import { ticket, LoginResponse  } from "api/types";
+import {
+  checkToken,
+  getTickets,
+  getLogin,
+  getGateName,
+  PostBill,
+} from "api/Api";
+import { ticket, LoginResponse } from "api/types";
 import { RootState } from "./store";
 
 export interface TicketsState {
@@ -10,6 +16,7 @@ export interface TicketsState {
   Tax: number;
   gate: string;
   user: LoginResponse | undefined;
+  validate: string | undefined;
   tickets: [];
 }
 
@@ -21,8 +28,8 @@ const initialState: TicketsState = {
   gate: "",
   user: undefined,
   tickets: [],
+  validate: undefined,
 };
-
 
 export const ticketsSlice = createSlice({
   name: "tickets",
@@ -79,6 +86,12 @@ export const ticketsSlice = createSlice({
         state.total = 0;
       }
     },
+    resetAll: (state) => {
+      state.Summary = [];
+      state.gate = "";
+      state.user = undefined;
+      state.tickets = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,11 +109,10 @@ export const ticketsSlice = createSlice({
 
         state.user = { ...action.payload?.user };
       })
-      .addCase(getLogin.rejected, (state) => {
+      .addCase(getLogin.rejected, (state, action) => {
         state.status = "failed";
+        state.validate = "please check your user or Password";
       });
-
-
 
     builder
       .addCase(checkToken.pending, (state) => {
@@ -114,7 +126,6 @@ export const ticketsSlice = createSlice({
       .addCase(checkToken.rejected, (state) => {
         state.status = "failed";
       });
-
 
     builder
       .addCase(getTickets.pending, (state) => {
@@ -133,7 +144,6 @@ export const ticketsSlice = createSlice({
         state.status = "failed";
       });
 
-
     builder
       .addCase(getGateName.pending, (state) => {
         state.status = "loading";
@@ -141,23 +151,20 @@ export const ticketsSlice = createSlice({
 
       .addCase(getGateName.fulfilled, (state, action) => {
         state.status = "idle";
-        state.gate = action.payload.Name;
+        state.gate = action.payload?.Name;
       })
       .addCase(getGateName.rejected, (state) => {
         state.status = "failed";
       });
-      builder
-      .addCase(PostBill.fulfilled, (state, action) => {
-        state.Summary = []
-        state.total = 0
-        state.Tax = 0
-      
-      })
-
+    builder.addCase(PostBill.fulfilled, (state, action) => {
+      state.Summary = [];
+      state.total = 0;
+      state.Tax = 0;
+    });
   },
 });
 
-export const { addTicketToSummary, deleteTicketFromSummary } =
+export const { addTicketToSummary, deleteTicketFromSummary, resetAll } =
   ticketsSlice.actions;
 
 export const getUser = (state: RootState) => state.tickets.user;
@@ -168,5 +175,6 @@ export const getStatus = (state: RootState) => state.tickets.status;
 export const getAllTickets = (state: RootState) => state.tickets.tickets;
 export const getGateID = (state: RootState) => state.tickets.user?.GateID;
 export const getGate = (state: RootState) => state.tickets.gate;
+export const getValidate = (state: RootState) => state.tickets.validate;
 
 export default ticketsSlice.reducer;
