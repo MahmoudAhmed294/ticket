@@ -9,8 +9,7 @@ export const getLogin = createAsyncThunk(
       url: "/login",
       method: "POST",
       data: form,
-    });
-
+    })
     return response.data;
   }
 );
@@ -64,7 +63,7 @@ export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err , "error");
       });
 
     return response?.data;

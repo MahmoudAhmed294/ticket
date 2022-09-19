@@ -10,6 +10,8 @@ import {
   Button,
   Stack,
   Typography,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React, { useEffect, useState } from "react";
@@ -50,13 +52,18 @@ const Login = () => {
     if (auth) {
       navigate("/");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth]);
 
   const handleLogin = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
     dispatch(getLogin(form));
   };
+  const handleClose = () => {
+    setState(false);
+  };
+  const [state, setState] = useState(true);
+
   return (
     <Grid container sx={{ height: "100vh" }} alignItems="center">
       <Grid item sx={{ display: { xs: "none", md: "flex" } }} md={6}>
@@ -154,6 +161,33 @@ const Login = () => {
           </Stack>
         </Stack>
       </Grid>
+      <Snackbar
+        open={state}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "error.main",
+            color: "body.light",
+            alignItems: 'center',
+            "& .MuiAlert-icon":{
+            color: "body.light",
+
+            }
+          },
+        }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          sx={{
+            width: "100%",
+            color: "body.light",
+          }}
+        >
+          Please check your User name and Password
+        </Alert>
+      </Snackbar>
     </Grid>
   );
 };
