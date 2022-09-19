@@ -93,6 +93,8 @@ export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
     })
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data);
+          
           return res;
         }
       })

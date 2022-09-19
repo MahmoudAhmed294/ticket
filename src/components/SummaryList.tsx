@@ -19,6 +19,7 @@ interface Props {}
 const SummaryList: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
   const [openAlert, setOpenAlert] = useState(false);
+  const [print, setPrint] = useState(true);
   const SummaryList = useAppSelector(getSummary);
   const Total = useAppSelector(getTotal);
   const Tax = useAppSelector(getTax);
@@ -38,8 +39,21 @@ const SummaryList: FunctionComponent<Props> = () => {
   };
 
   const SendBillData = () => {
-    if (payMethod === "Card") {
-      if (getTotal <= cardBalance) {
+    if (payMethod === "Cash") {
+      dispatch(
+        PostBill({
+          summary: SummaryList,
+          total: Total,
+          tax: Tax,
+          userName: userName,
+          MemberID: memberID,
+          CardID: cardID,
+          isPrinted: 1,
+          paymentMethod: payMethod,
+          BillNumber: billNumber,
+        })
+      );
+    } else if (payMethod === "Card" && Total <= cardBalance) {
         dispatch(
           PostBill({
             summary: SummaryList,
@@ -53,10 +67,12 @@ const SummaryList: FunctionComponent<Props> = () => {
             BillNumber: billNumber,
           })
         );
-      } else {
-        setOpenAlert(true);
       }
-    }
+      else {
+       setPrint(false);
+
+       setOpenAlert(true);
+     }
   };
   return (
     <Stack
@@ -87,7 +103,7 @@ const SummaryList: FunctionComponent<Props> = () => {
             color: "body.light",
           }}
         >
-          {t('no enough balance in your card')}
+          {t("no enough balance in your card")}
         </Alert>
       </Snackbar>
 
@@ -159,12 +175,12 @@ const SummaryList: FunctionComponent<Props> = () => {
               <Button
                 variant="contained"
                 fullWidth
-                disabled={!memberID || SummaryList.length === 0 || !openAlert ? true : false}
+                disabled={!memberID || SummaryList.length === 0 || Total >= cardBalance  ? true : false}
               >
                 {t("Pay")}
               </Button>
             )}
-            content={() => componentRef.current}
+            content={() => ( componentRef.current )}
             onBeforeGetContent={SendBillData}
           />
           <Box ref={componentRef} className="print-source">

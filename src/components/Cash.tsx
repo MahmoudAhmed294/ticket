@@ -24,7 +24,7 @@ const Cash: FunctionComponent<Props> = ({ isTicketSelect }) => {
 
   const SearchAPi = (e: any) => {
     setSearchValue(e.target.value);
-    if (e.target.value.length > 0 && searchValue !== "") {
+    if (e.target.value.length > 0 ) {
       dispatch(getMember(e.target.value));
     }
   };
@@ -93,14 +93,6 @@ const Cash: FunctionComponent<Props> = ({ isTicketSelect }) => {
                   {t("no card with this number")}
                 </Typography>
               )
-            )}
-            {card?.Balance && (
-              <Stack direction="row" spacing={0.5} alignItems="baseline">
-                <Typography variant="h5" sx={{ color: "primary.main" }}>
-                  {t("card Balance:")}
-                </Typography>
-                <Typography variant="caption">{card?.Balance}</Typography>
-              </Stack>
             )}
           </>
         )}
