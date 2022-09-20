@@ -22,7 +22,7 @@ const Api = axios.create({
   baseURL: getBaseUrl(),
   withCredentials: true,
   headers: {
-    "Access-Control-Allow-Origin": `${getBaseUrl()}`,
+    "Access-Control-Allow-Origin": `"*"`,
     "Content-Type": "application/json",
   },
   timeout: 15000,
