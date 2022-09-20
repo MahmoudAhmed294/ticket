@@ -78,7 +78,7 @@ const SummaryList: FunctionComponent<Props> = () => {
     <Stack
       direction="column"
       justifyContent="space-between"
-      sx={{ height: "100%" }}
+      sx={{ height: "100%"  }}
     >
       <Snackbar
         open={openAlert}
@@ -143,7 +143,7 @@ const SummaryList: FunctionComponent<Props> = () => {
         </Stack>
       </Box>
       <Divider sx={{ borderColor: "primary.main", my: 2 }} />
-      <Box sx={{ pl: 4 }}>
+      <Box sx={{ pl: {xs:"unset",sm:4} }}>
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -161,13 +161,14 @@ const SummaryList: FunctionComponent<Props> = () => {
           <Typography variant="h3">{Total}.00 EGP</Typography>
         </Stack>
         <Stack
-          direction="row"
+          direction={{xs:"column", sm:"row"}}
+
           justifyContent="space-between"
           alignItems="center"
           spacing={2}
           sx={{ my: 2 }}
         >
-          <Button variant="contained" fullWidth>
+          <Button variant="outlined" fullWidth>
             {t("Print")}
           </Button>
           <ReactToPrint

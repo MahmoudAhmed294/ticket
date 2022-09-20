@@ -26,6 +26,8 @@ export const paymentSlice = createSlice({
   reducers: {
     payMethod: (state, action: PayloadAction<any>) => {
       state.payMethod = action.payload;
+      state.card =undefined
+      state.member =undefined
     },
     reset: () => initialState,
   },
@@ -39,7 +41,7 @@ export const paymentSlice = createSlice({
         state.status = "idle";
         state.card = action.payload?.card;
         state.member = action.payload?.member;
-        state.billNumber = action.payload.billID;
+        state.billNumber = action.payload?.billID;
         
 
       })

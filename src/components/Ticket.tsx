@@ -59,8 +59,12 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, id }) => {
         cursor: isSummary ? "unset" : "pointer",
         py: 2,
         px: 1,
-        width: isSummary ? "70px" : { xs: "80px", sm: "110px" },
-        height: isSummary ? "70px" : { xs: "80px", sm: "105px" },
+        width: isSummary
+          ? { xs: "80px", sm: "85px" }
+          : { xs: "80px", sm: "110px" },
+        height: isSummary
+          ? { xs: "70px", sm: "80px" }
+          : { xs: "80px", sm: "105px" },
         borderRadius: "8px",
         color: "body.light",
         border: isSelected && !isSummary ? "2px solid " : "unset",
@@ -70,18 +74,25 @@ const Ticket: FunctionComponent<Props> = ({ title, isSummary, id }) => {
       direction="column"
       justifyContent="center"
       alignItems="center"
-      spacing={isSummary ? 0 : 1.5}
+      spacing={0.5}
     >
       <img
         src={TicketImg}
         alt={title}
-        width={isSummary ? "30px" : IsSm ? "25px" : "50px"}
+        width={
+             !isSummary && IsSm
+            ? "30px"
+            : isSummary && IsSm
+            ? "25px":
+            isSummary
+            ? "35px"
+            : "50px"
+        }
       />
       <Typography
         variant={isSummary ? "overline" : "body1"}
         sx={{
           textAlign: "center",
-          mt: { xs: "0 !important", sm: "12px" },
           fontSize: { xs: "14px !important", sm: "inherit" },
         }}
       >

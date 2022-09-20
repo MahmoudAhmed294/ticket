@@ -19,7 +19,7 @@ import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
 import { getGateName, logout } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getAllTickets, getStatus, getGate ,getGateID , resetAll } from "store/ticketsSlice";
+import {  getStatus, getGate ,getGateID , resetAll } from "store/ticketsSlice";
 import { reset } from "store/paymentSlice";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 
@@ -28,7 +28,6 @@ const NavBar: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const user = useAuth();
-  const tickets = useAppSelector(getAllTickets);
   const USER = useAppSelector((state:any) => state.tickets?.user);
   const Isloading = useAppSelector(getStatus);
   const GateName = useAppSelector(getGate);
@@ -80,13 +79,10 @@ const logoutHandle = () => {
                 sx={{ flexGrow: 1 }}
               >
                 <Typography variant={IsSm ? "h6" : "h4"}>
-                  Ahmed Khaled
+                {user?.UserName}
                 </Typography>
                 <Typography variant={IsSm ? "caption" : "h4"}>
-                  5 Sep 2022
-                </Typography>
-                <Typography variant={IsSm ? "caption" : "h4"}>
-                  Gate 2
+                  {GateName}
                 </Typography>
               </Stack>
             ) : (

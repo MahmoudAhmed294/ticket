@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "api";
-import { LoginInput , Bill } from "./types";
+import { LoginInput, Bill } from "./types";
 
 export const getLogin = createAsyncThunk(
   "api/login",
@@ -9,7 +9,7 @@ export const getLogin = createAsyncThunk(
       url: "/login",
       method: "POST",
       data: form,
-    })
+    });
     return response.data;
   }
 );
@@ -24,7 +24,6 @@ export const checkToken = createAsyncThunk("api/checkToken", async () => {
       }
     })
     .catch((res) => {
-      console.log(res);
       return res;
     });
 
@@ -79,7 +78,7 @@ export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
         }
       })
       .catch((err) => {
-        console.log(err , "error");
+        console.log(err, "error");
       });
 
     return response?.data;
@@ -113,7 +112,6 @@ export const getMember = createAsyncThunk(
       })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             return res;
           }
         })
@@ -126,17 +124,14 @@ export const getMember = createAsyncThunk(
   }
 );
 
-export const PostBill = createAsyncThunk(
-  "api/payment",
-  async (data: Bill) => {
-    if (data) {
-      const response = await Api({
-        url: 'bill',
-        method: "post",
-        data:data
-      })
+export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
+  if (data) {
+    const response = await Api({
+      url: "bill",
+      method: "post",
+      data: data,
+    });
 
-      return response;
-    }
+    return response;
   }
-);
+});
