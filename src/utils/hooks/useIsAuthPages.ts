@@ -5,7 +5,7 @@ import { useAppSelector } from "./useStore";
 
 export const useAuth = () => {
   const userData = useAppSelector(getUser);
-  const [User, setUser] = useState<LoginResponse | undefined>(undefined);
+  const [User, setUser] = useState<string | undefined>(undefined);
 
   useLayoutEffect(() => {
     setUser(userData);

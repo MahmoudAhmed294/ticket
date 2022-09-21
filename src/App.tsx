@@ -15,8 +15,8 @@ import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { useAuth } from "utils/hooks/useIsAuthPages";
-import {  getStatus,getAllTickets, getUser } from "store/ticketsSlice";
-import { getTickets ,checkToken } from "api/Api";
+import { getStatus, getAllTickets, getUser } from "store/ticketsSlice";
+import { getTickets, checkToken } from "api/Api";
 import Bill from "components/Bill";
 
 function App() {
@@ -24,26 +24,28 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(true);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
-  const USER = useAppSelector(getUser);
+  const USER: any = useAppSelector(getUser);
   const ticket = useAppSelector(getAllTickets);
   const IsLoading = useAppSelector(getStatus);
 
   useEffect(() => {
     dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
-
-    setIsLoaded(false);
-    if (IsLoading === "failed" || !USER) {
-      dispatch(checkToken());      
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, language]);
 
   useEffect(() => {
-    if (USER && ticket.length === 0) {
-      dispatch(getTickets(USER?.GateID));
+    if (USER && ticket?.length === 0) {
+      dispatch(getTickets(USER));
     }
-  }, [USER ,dispatch ,ticket]);
-  
+  }, [USER, dispatch, ticket]);
+
+  useEffect(() => {
+    setIsLoaded(false);
+    if (!USER) {
+      
+      dispatch(checkToken());
+    }
+  }, [USER, setIsLoaded, dispatch ,ticket]);
+
   return (
     <Box>
       {isLoaded || IsLoading === "loading" ? (
@@ -52,7 +54,7 @@ function App() {
         <Router>
           <Routes>
             <Route
-              element={auth ? <Tickets /> : <Navigate to="/login" />}
+              element={USER ? <Tickets /> : <Navigate to="/login" />}
               path="/"
             />
 
@@ -60,13 +62,11 @@ function App() {
           </Routes>
         </Router>
       )}
-
     </Box>
   );
 }
 
 export default App;
-
 
 /* 
 TODO ticket api handle repeated 

@@ -1,16 +1,51 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "api";
+import axios from "axios";
 import { LoginInput, Bill } from "./types";
+
+export const getTickets = createAsyncThunk(
+  "api/tickets",
+  async (userName: string | number) => {
+    const response = await Api({
+      url: "/tickets",
+      method: "POST",
+      data: { userName },
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          return res;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return response?.data;
+  }
+);
 
 export const getLogin = createAsyncThunk(
   "api/login",
   async (form: LoginInput) => {
-    const response = await Api({
-      url: "/login",
+    const response = await axios({
+      url: "https://open-air-mall-proxy-server.vercel.app/api/FrontEnd/SignIn",
       method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json; charset=utf-8",
+      },
       data: form,
-    });
-    return response.data;
+    })
+      .then((res) => {
+        if (res.data.name !== "Invlid user") {
+          return res;
+        }
+      })
+      .catch((res) => {
+        return res;
+      });
+
+    return response?.data;
   }
 );
 export const checkToken = createAsyncThunk("api/checkToken", async () => {
@@ -46,26 +81,6 @@ export const logout = createAsyncThunk("api/logout", async () => {
   return response?.data;
 });
 
-export const getTickets = createAsyncThunk(
-  "api/tickets",
-  async (GateID: string | number) => {
-    const response = await Api({
-      url: "/tickets",
-      method: "POST",
-      data: { GateID },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    return response?.data;
-  }
-);
 export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
   if (GateID) {
     const response = await Api({

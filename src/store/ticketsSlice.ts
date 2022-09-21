@@ -15,9 +15,10 @@ export interface TicketsState {
   total: number;
   Tax: number;
   gate: string;
-  user: LoginResponse | undefined;
-  validate: string | undefined;
+  user: string | undefined;
+  validate: any;
   tickets: [];
+  GateID:number |undefined
 }
 
 const initialState: TicketsState = {
@@ -29,6 +30,7 @@ const initialState: TicketsState = {
   user: undefined,
   tickets: [],
   validate: undefined,
+  GateID: undefined,
 };
 
 export const ticketsSlice = createSlice({
@@ -101,17 +103,12 @@ export const ticketsSlice = createSlice({
 
       .addCase(getLogin.fulfilled, (state, action) => {
         state.status = "idle";
-        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
-          ...ticket,
-          quantity: 1,
-        }));
-        state.tickets = addQuantity;
 
-        state.user = { ...action.payload?.user };
+        state.user = action.payload?.name;
       })
       .addCase(getLogin.rejected, (state, action) => {
         state.status = "failed";
-        state.validate = "please check your user or Password";
+        state.validate = action.payload;
       });
 
     builder
@@ -121,7 +118,10 @@ export const ticketsSlice = createSlice({
 
       .addCase(checkToken.fulfilled, (state, action) => {
         state.status = "idle";
-        state.user = action.payload;
+        console.log(action.payload);
+        
+        state.user = action.payload?.userName;
+        state.GateID = action.payload?.GateID;
       })
       .addCase(checkToken.rejected, (state) => {
         state.status = "failed";
@@ -139,6 +139,7 @@ export const ticketsSlice = createSlice({
           quantity: 1,
         }));
         state.tickets = addQuantity;
+        state.GateID = action.payload?.GateID;
       })
       .addCase(getTickets.rejected, (state) => {
         state.status = "failed";
@@ -173,7 +174,7 @@ export const getTotal = (state: RootState) => state.tickets.total;
 export const getTax = (state: RootState) => state.tickets.Tax;
 export const getStatus = (state: RootState) => state.tickets.status;
 export const getAllTickets = (state: RootState) => state.tickets.tickets;
-export const getGateID = (state: RootState) => state.tickets.user?.GateID;
+export const getGateID = (state: RootState) => state.tickets.GateID;
 export const getGate = (state: RootState) => state.tickets.gate;
 export const getValidate = (state: RootState) => state.tickets.validate;
 

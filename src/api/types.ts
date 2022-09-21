@@ -1,7 +1,8 @@
 export type LoginResponse = {
-  ID: number;
-  GateID: number;
-  UserName: string;
+  ID?: number;
+  GateID?: number;
+  UserName?: string;
+  name?: string;
 };
 export type LoginInput = {
   userName: string;

@@ -25,7 +25,7 @@ const Api = axios.create({
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   },
-  timeout: 15000,
+  // timeout: 15000,
 });
 
 export default Api;

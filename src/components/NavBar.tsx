@@ -79,7 +79,7 @@ const logoutHandle = () => {
                 sx={{ flexGrow: 1 }}
               >
                 <Typography variant={IsSm ? "h6" : "h4"}>
-                {user?.UserName}
+                {USER}
                 </Typography>
                 <Typography variant={IsSm ? "caption" : "h4"}>
                   {GateName}
@@ -131,7 +131,7 @@ const logoutHandle = () => {
                       sx={{ color: "body.light" }}
                     >
                       <Avatar alt="Mahmoud" />
-                      <Typography variant="body2">{user?.UserName}</Typography>
+                      <Typography variant="body2">{user}</Typography>
                       <KeyboardArrowDownIcon />
                     </Stack>
                   </Button>
