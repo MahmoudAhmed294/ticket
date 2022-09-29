@@ -7,9 +7,10 @@ import {
 } from "@mui/material";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getCard } from "api/Api";
+import { getBillNumber, getCard } from "api/Api";
 import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
+import AddBalance from "./AddBalance";
 
 interface Props {
   isTicketSelect: boolean;
@@ -17,8 +18,8 @@ interface Props {
 const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
   const { t } = useTranslation();
   const IsLoading = useAppSelector(getStatus);
-  const card = useAppSelector(getCardInfo);
   const member = useAppSelector(getMemberInfo);
+  const card = useAppSelector(getCardInfo);
   const [searchValue, setSearchValue] = useState("");
   const dispatch = useAppDispatch();
 
@@ -39,22 +40,30 @@ const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
       <Box
         sx={{
           mt: { xs: 0, sm: 3 },
-          maxWidth: { xs: "100%", md: "470px" },
           order: { xs: 3, sm: "unset" },
         }}
       >
         <>
           <Typography variant="h4">{t("2. Enter Card ID")}</Typography>
-          <TextField
-            variant="outlined"
-            label="Card ID"
-            sx={{ mt: 1 }}
-            fullWidth
-            type="text"
-            value={searchValue}
-            onChange={SearchAPi}
-            disabled={isTicketSelect}
-          />
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="start"
+            flexWrap={"wrap"}
+            sx={{ width: "100%" }}
+          >
+            <TextField
+              variant="outlined"
+              label="Card ID"
+              sx={{ mt: 1, maxWidth: { xs: "100%", md: "450px" } }}
+              fullWidth
+              type="text"
+              value={searchValue}
+              onChange={SearchAPi}
+              disabled={isTicketSelect}
+            />
+            <AddBalance />
+          </Stack>
         </>
       </Box>
       <Stack

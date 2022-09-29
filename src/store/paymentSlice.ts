@@ -1,5 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getCard, getMember, PostBill } from "api/Api";
+import {
+  getCard,
+  getMember,
+  PostBill,
+  getBillNumber,
+  getBillNumberOfTicket,
+  postBalance,
+} from "api/Api";
 import { Card, Member } from "api/types";
 import { RootState } from "./store";
 
@@ -26,8 +33,8 @@ export const paymentSlice = createSlice({
   reducers: {
     payMethod: (state, action: PayloadAction<any>) => {
       state.payMethod = action.payload;
-      state.card =undefined
-      state.member =undefined
+      state.card = undefined;
+      state.member = undefined;
     },
     reset: () => initialState,
   },
@@ -41,9 +48,7 @@ export const paymentSlice = createSlice({
         state.status = "idle";
         state.card = action.payload?.card;
         state.member = action.payload?.member;
-        state.billNumber = action.payload?.billID;
-        
-
+        // state.billNumber = action.payload?.billID;
       })
       .addCase(getCard.rejected, (state) => {
         state.status = "failed";
@@ -55,8 +60,7 @@ export const paymentSlice = createSlice({
 
       .addCase(getMember.fulfilled, (state, action) => {
         state.status = "idle";
-        state.member = action.payload.member;
-        state.billNumber = action.payload.billID;
+        state.member = action.payload;
       })
       .addCase(getMember.rejected, (state) => {
         state.status = "failed";
@@ -76,14 +80,52 @@ export const paymentSlice = createSlice({
       .addCase(PostBill.rejected, (state) => {
         state.status = "failed";
       });
+    builder
+      .addCase(getBillNumber.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getBillNumber.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.billNumber = action.payload;
+      })
+      .addCase(getBillNumber.rejected, (state) => {
+        state.status = "failed";
+      });
+    builder
+      .addCase(getBillNumberOfTicket.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getBillNumberOfTicket.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.billNumber = action.payload;
+
+      })
+      .addCase(getBillNumberOfTicket.rejected, (state) => {
+        state.status = "failed";
+      });
+    builder
+      .addCase(postBalance.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(postBalance.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.card = action.payload;
+
+      })
+      .addCase(postBalance.rejected, (state) => {
+        state.status = "failed";
+      });
   },
 });
 
-export const { payMethod ,reset} = paymentSlice.actions;
+export const { payMethod, reset } = paymentSlice.actions;
 
 export const getStatus = (state: RootState) => state.payment.status;
 export const getCardInfo = (state: RootState) => state.payment.card;
 export const getMemberInfo = (state: RootState) => state.payment.member;
-export const getBillNumber = (state: RootState) => state.payment.billNumber;
+export const billNumber = (state: RootState) => state.payment.billNumber;
 
 export default paymentSlice.reducer;

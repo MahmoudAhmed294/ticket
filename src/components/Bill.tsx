@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import QRCode from "react-qr-code";
-import { getBillNumber } from "store/paymentSlice";
+import { billNumber } from "store/paymentSlice";
 import { getSummary, getTax, getTotal } from "store/ticketsSlice";
 import { useAppSelector } from "utils/hooks/useStore";
 
@@ -10,7 +10,11 @@ const Bill: FunctionComponent<Props> = () => {
   const tickets = useAppSelector(getSummary);
   const total = useAppSelector(getTotal);
   const tax = useAppSelector(getTax);
-  const billNum = useAppSelector(getBillNumber);
+  const billNum = useAppSelector(billNumber);
+  
+  
+  
+
 
   return (
     <Box

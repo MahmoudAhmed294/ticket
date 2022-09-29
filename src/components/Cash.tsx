@@ -40,7 +40,7 @@ const Cash: FunctionComponent<Props> = ({ isTicketSelect }) => {
       <Box
         sx={{
           mt: { xs: 0, sm: 3 },
-          maxWidth: { xs: "100%", md: "470px" },
+          maxWidth: { xs: "100%", md: "450px" },
           order: { xs: 3, sm: "unset" },
         }}
       >

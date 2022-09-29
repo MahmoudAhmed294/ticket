@@ -14,7 +14,7 @@ import { getSummary, getTax, getTotal } from "store/ticketsSlice";
 import { useAppSelector, useAppDispatch } from "utils/hooks/useStore";
 import Bill from "./Bill";
 import SummaryItem from "./SummaryItem";
-import { PostBill } from "api/Api";
+import { PostBill , getBillNumber } from "api/Api";
 interface Props {}
 const SummaryList: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ const SummaryList: FunctionComponent<Props> = () => {
   const cardBalance = useAppSelector(
     (state: any) => state.payment.card?.Balance
   );
-  const userName = useAppSelector((state: any) => state.tickets.user?.UserName);
+  const userName = useAppSelector((state: any) => state.tickets.user);
   const billNumber = useAppSelector((state: any) => state.payment?.billNumber);
 
   const componentRef = useRef(null);
@@ -37,6 +37,7 @@ const SummaryList: FunctionComponent<Props> = () => {
   const handleClose = () => {
     setOpenAlert(false);
   };
+
 
   const SendBillData = () => {
     if (payMethod === "Cash") {
@@ -183,6 +184,7 @@ const SummaryList: FunctionComponent<Props> = () => {
             )}
             content={() => ( componentRef.current )}
             onBeforeGetContent={SendBillData}
+            onAfterPrint={()=>dispatch(getBillNumber())}
           />
           <Box ref={componentRef} className="print-source">
             <Bill />

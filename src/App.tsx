@@ -14,13 +14,11 @@ import Tickets from "pages/Tickets";
 import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { useAuth } from "utils/hooks/useIsAuthPages";
 import { getStatus, getAllTickets, getUser } from "store/ticketsSlice";
-import { getTickets, checkToken } from "api/Api";
-import Bill from "components/Bill";
+import {  checkToken, getBillNumber } from "api/Api";
 
 function App() {
-  let auth = useAuth();
+  
   const [isLoaded, setIsLoaded] = useState(true);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
@@ -32,11 +30,6 @@ function App() {
     dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
   }, [dispatch, language]);
 
-  useEffect(() => {
-    if (USER && ticket?.length === 0) {
-      dispatch(getTickets(USER));
-    }
-  }, [USER, dispatch, ticket]);
 
   useEffect(() => {
     setIsLoaded(false);
@@ -45,6 +38,10 @@ function App() {
       dispatch(checkToken());
     }
   }, [USER, setIsLoaded, dispatch ,ticket]);
+  useEffect(() => {
+    dispatch(getBillNumber())
+
+  }, [getBillNumber])
 
   return (
     <Box>

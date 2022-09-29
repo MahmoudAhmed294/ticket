@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  checkToken,
-  getTickets,
-  getLogin,
-  getGateName,
-  PostBill,
-} from "api/Api";
-import { ticket, LoginResponse } from "api/types";
+import { checkToken, getLogin, getGateName, PostBill } from "api/Api";
+import { ticket } from "api/types";
 import { RootState } from "./store";
 
 export interface TicketsState {
@@ -18,7 +12,7 @@ export interface TicketsState {
   user: string | undefined;
   validate: any;
   tickets: [];
-  GateID:number |undefined
+  GateID: number | undefined;
 }
 
 const initialState: TicketsState = {
@@ -103,8 +97,13 @@ export const ticketsSlice = createSlice({
 
       .addCase(getLogin.fulfilled, (state, action) => {
         state.status = "idle";
-
-        state.user = action.payload?.name;
+        state.user = action.payload?.userName;
+        state.GateID = action.payload?.GateID;
+        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
+          ...ticket,
+          quantity: 1,
+        }));
+        state.tickets = addQuantity;
       })
       .addCase(getLogin.rejected, (state, action) => {
         state.status = "failed";
@@ -118,30 +117,16 @@ export const ticketsSlice = createSlice({
 
       .addCase(checkToken.fulfilled, (state, action) => {
         state.status = "idle";
-        console.log(action.payload);
-        
+
         state.user = action.payload?.userName;
         state.GateID = action.payload?.GateID;
-      })
-      .addCase(checkToken.rejected, (state) => {
-        state.status = "failed";
-      });
-
-    builder
-      .addCase(getTickets.pending, (state) => {
-        state.status = "loading";
-      })
-
-      .addCase(getTickets.fulfilled, (state, action) => {
-        state.status = "idle";
         const addQuantity = action.payload?.tickets.map((ticket: any) => ({
           ...ticket,
           quantity: 1,
         }));
         state.tickets = addQuantity;
-        state.GateID = action.payload?.GateID;
       })
-      .addCase(getTickets.rejected, (state) => {
+      .addCase(checkToken.rejected, (state) => {
         state.status = "failed";
       });
 

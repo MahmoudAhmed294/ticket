@@ -1,45 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "api";
-import axios from "axios";
 import { LoginInput, Bill } from "./types";
-
-export const getTickets = createAsyncThunk(
-  "api/tickets",
-  async (userName: string | number) => {
-    const response = await Api({
-      url: "/tickets",
-      method: "POST",
-      data: { userName },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    return response?.data;
-  }
-);
 
 export const getLogin = createAsyncThunk(
   "api/login",
   async (form: LoginInput) => {
-    const response = await axios({
-      url: "https://open-air-mall-proxy-server.vercel.app/api/FrontEnd/SignIn",
+    const response = await Api({
+      url: "/Login",
       method: "POST",
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json; charset=utf-8",
-      },
       data: form,
     })
       .then((res) => {
-        if (res.data.name !== "Invlid user") {
-          return res;
-        }
+        return res;
       })
       .catch((res) => {
         return res;
@@ -64,6 +36,7 @@ export const checkToken = createAsyncThunk("api/checkToken", async () => {
 
   return response?.data;
 });
+
 export const logout = createAsyncThunk("api/logout", async () => {
   const response = await Api({
     url: "/logout",
@@ -89,6 +62,8 @@ export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
     })
       .then((res) => {
         if (res.status === 200) {
+          console.log(res);
+
           return res;
         }
       })
@@ -106,9 +81,7 @@ export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
       method: "get",
     })
       .then((res) => {
-        if (res.status === 200) {
           return res;
-        }
       })
       .catch((err) => {
         console.log(err);
@@ -119,16 +92,14 @@ export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
 });
 export const getMember = createAsyncThunk(
   "api/member",
-  async (CardID: string) => {
-    if (CardID) {
+  async (memberID: string) => {
+    if (memberID) {
       const response = await Api({
-        url: `members/${CardID}`,
+        url: `http://localhost:8080/api/member/${memberID}`,
         method: "get",
       })
         .then((res) => {
-          if (res.status === 200) {
-            return res;
-          }
+          return res;
         })
         .catch((err) => {
           console.log(err);
@@ -137,6 +108,43 @@ export const getMember = createAsyncThunk(
       return response?.data;
     }
   }
+);
+export const getBillNumber = createAsyncThunk(
+  "api/billNumber",
+  async () => {
+      const response = await Api({
+        url: `http://localhost:8080/api/billNumber`,
+        method: "get",
+      })
+        .then((res) => {
+          
+          return res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      return response?.data;
+    
+  }
+);
+
+export const getBillNumberOfTicket = createAsyncThunk(
+  "api/billNumberOfTicket",
+  async () => {
+      const response = await Api({
+        url: `http://localhost:8080/api/ticketsNumber`,
+        method: "get",
+      })
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      return response?.data;
+    }
 );
 
 export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
@@ -148,5 +156,16 @@ export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
     });
 
     return response;
+  }
+});
+export const postBalance = createAsyncThunk("api/addBalance", async (data:{ID:any , balance:number}) => {
+  if (data) {
+    const response = await Api({
+      url: "chargeBalance",
+      method: "post",
+      data: data,
+    });
+
+    return response.data;
   }
 });

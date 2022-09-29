@@ -19,7 +19,7 @@ import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
 import { getGateName, logout } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import {  getStatus, getGate ,getGateID , resetAll } from "store/ticketsSlice";
+import { getStatus, getGate, getGateID, resetAll } from "store/ticketsSlice";
 import { reset } from "store/paymentSlice";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 
@@ -28,10 +28,10 @@ const NavBar: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const user = useAuth();
-  const USER = useAppSelector((state:any) => state.tickets?.user);
+  const USER = useAppSelector((state: any) => state.tickets?.user);
   const Isloading = useAppSelector(getStatus);
   const GateName = useAppSelector(getGate);
-  const GateID:any = useAppSelector(getGateID);
+  const GateID: any = useAppSelector(getGateID);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -44,19 +44,16 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if(USER && GateName === '') {
-
+    if (USER && Isloading === "idle" && GateName === "") {
       dispatch(getGateName(GateID));
     }
-  }, [GateName , USER]);
+  }, [GateName, USER, dispatch, GateID]);
 
-const logoutHandle = () => {
-  dispatch(logout());
-  dispatch(resetAll());
-  dispatch(reset());
-
-
-}
+  const logoutHandle = () => {
+    dispatch(logout());
+    dispatch(resetAll());
+    dispatch(reset());
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -78,9 +75,7 @@ const logoutHandle = () => {
                 alignItems="center"
                 sx={{ flexGrow: 1 }}
               >
-                <Typography variant={IsSm ? "h6" : "h4"}>
-                {USER}
-                </Typography>
+                <Typography variant={IsSm ? "h6" : "h4"}>{USER}</Typography>
                 <Typography variant={IsSm ? "caption" : "h4"}>
                   {GateName}
                 </Typography>
