@@ -20,6 +20,7 @@ export const getLogin = createAsyncThunk(
     return response?.data;
   }
 );
+
 export const checkToken = createAsyncThunk("api/checkToken", async () => {
   const response = await Api({
     url: "/checkToken",
@@ -57,7 +58,7 @@ export const logout = createAsyncThunk("api/logout", async () => {
 export const getGateName = createAsyncThunk("api/gate", async (GateID: any) => {
   if (GateID) {
     const response = await Api({
-      url: `/gates/${GateID}`,
+      url: `gates/${GateID}`,
       method: "get",
     })
       .then((res) => {
@@ -81,7 +82,7 @@ export const getCard = createAsyncThunk("api/card", async (CardID: string) => {
       method: "get",
     })
       .then((res) => {
-          return res;
+        return res;
       })
       .catch((err) => {
         console.log(err);
@@ -95,7 +96,7 @@ export const getMember = createAsyncThunk(
   async (memberID: string) => {
     if (memberID) {
       const response = await Api({
-        url: `http://localhost:8080/api/member/${memberID}`,
+        url: `member/${memberID}`,
         method: "get",
       })
         .then((res) => {
@@ -109,42 +110,37 @@ export const getMember = createAsyncThunk(
     }
   }
 );
-export const getBillNumber = createAsyncThunk(
-  "api/billNumber",
-  async () => {
-      const response = await Api({
-        url: `http://localhost:8080/api/billNumber`,
-        method: "get",
-      })
-        .then((res) => {
-          
-          return res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+export const getBillNumber = createAsyncThunk("api/billNumber", async () => {
+  const response = await Api({
+    url: `billNumber`,
+    method: "get",
+  })
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
-      return response?.data;
-    
-  }
-);
+  return response?.data;
+});
 
 export const getBillNumberOfTicket = createAsyncThunk(
   "api/billNumberOfTicket",
   async () => {
-      const response = await Api({
-        url: `http://localhost:8080/api/ticketsNumber`,
-        method: "get",
+    const response = await Api({
+      url: `ticketsNumber`,
+      method: "get",
+    })
+      .then((res) => {
+        return res;
       })
-        .then((res) => {
-          return res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      .catch((err) => {
+        console.log(err);
+      });
 
-      return response?.data;
-    }
+    return response?.data;
+  }
 );
 
 export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
@@ -158,14 +154,17 @@ export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
     return response;
   }
 });
-export const postBalance = createAsyncThunk("api/addBalance", async (data:{ID:any , balance:number}) => {
-  if (data) {
-    const response = await Api({
-      url: "chargeBalance",
-      method: "post",
-      data: data,
-    });
+export const postBalance = createAsyncThunk(
+  "api/addBalance",
+  async (data: { ID: any; balance: number }) => {
+    if (data) {
+      const response = await Api({
+        url: "chargeBalance",
+        method: "post",
+        data: data,
+      });
 
-    return response.data;
+      return response.data;
+    }
   }
-});
+);
