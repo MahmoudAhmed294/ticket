@@ -131,10 +131,6 @@ export const ticketsSlice = createSlice({
       });
 
     builder
-      .addCase(getGateName.pending, (state) => {
-        state.status = "loading";
-      })
-
       .addCase(getGateName.fulfilled, (state, action) => {
         state.status = "idle";
         state.gate = action.payload?.Name;

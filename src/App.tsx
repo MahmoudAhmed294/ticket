@@ -15,33 +15,37 @@ import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { getStatus, getAllTickets, getUser } from "store/ticketsSlice";
-import {  checkToken, getBillNumber } from "api/Api";
+import { checkToken, getBillNumber } from "api/Api";
+import { useCookies } from "react-cookie";
 
 function App() {
-  
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
   const USER: any = useAppSelector(getUser);
-  const ticket = useAppSelector(getAllTickets);
   const IsLoading = useAppSelector(getStatus);
+  const [cookies, setCookie] = useCookies(["token"]);
 
   useEffect(() => {
     dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
   }, [dispatch, language]);
 
-
   useEffect(() => {
-    setIsLoaded(false);
-    if (!USER) {
-      
-      dispatch(checkToken());
+    if (IsLoading === "loading") {
+      setIsLoaded(true);
     }
-  }, [USER, setIsLoaded, dispatch ,ticket]);
+    if (cookies.token && !USER) {
+      dispatch(checkToken(cookies.token)).then((res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          setIsLoaded(false);
+          
+        }
+      });
+    }
+  }, [USER, setIsLoaded, dispatch, cookies]);
   useEffect(() => {
-    dispatch(getBillNumber())
-
-  }, [getBillNumber])
+    dispatch(getBillNumber());
+  }, [getBillNumber]);
 
   return (
     <Box>

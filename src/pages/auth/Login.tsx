@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { getLogin } from "api/Api";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 import { getValidate } from "store/ticketsSlice";
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Login = () => {
   const validate = useAppSelector(getValidate);
   const dispatch = useAppDispatch();
   const auth = useAuth();
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const changeLanguage = () => {
     switch (language) {
@@ -59,7 +61,12 @@ const Login = () => {
 
   const handleLogin = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
-    dispatch(getLogin(form));
+    dispatch(getLogin(form)).then((res) => {
+      setCookie("token", res.payload.token, {
+        secure: true,
+        maxAge: 168 * 60 * 60,
+      });
+    });
   };
   const handleClose = () => {
     setOpenAlert(false);
@@ -164,18 +171,17 @@ const Login = () => {
         </Stack>
       </Grid>
       <Snackbar
-        open={validate ?  openAlert : false}
+        open={validate ? openAlert : false}
         autoHideDuration={3000}
         onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
             backgroundColor: "error.main",
             color: "body.light",
-            alignItems: 'center',
-            "& .MuiAlert-icon":{
-            color: "body.light",
-
-            }
+            alignItems: "center",
+            "& .MuiAlert-icon": {
+              color: "body.light",
+            },
           },
         }}
       >

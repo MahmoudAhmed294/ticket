@@ -21,10 +21,11 @@ export const getLogin = createAsyncThunk(
   }
 );
 
-export const checkToken = createAsyncThunk("api/checkToken", async () => {
+export const checkToken = createAsyncThunk("api/checkToken", async (token : {token :string} ) => {
   const response = await Api({
     url: "/checkToken",
     method: "get",
+    headers:{"authorization" : `${token}`} 
   })
     .then((res) => {
       if (res.status === 200) {
@@ -156,7 +157,7 @@ export const PostBill = createAsyncThunk("api/payment", async (data: Bill) => {
 });
 export const postBalance = createAsyncThunk(
   "api/addBalance",
-  async (data: { ID: any; balance: number }) => {
+  async (data: { ID: any; balance: number; userName:any; }) => {
     if (data) {
       const response = await Api({
         url: "chargeBalance",

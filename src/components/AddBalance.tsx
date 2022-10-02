@@ -9,6 +9,7 @@ import { getCard, postBalance } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
+import { getUser } from "store/ticketsSlice";
 
 export default function AddBalance() {
   const [open, setOpen] = React.useState(false);
@@ -17,6 +18,7 @@ export default function AddBalance() {
   const [balanceInputs, setBalanceInputs] = React.useState<any>(0);
   const IsLoading = useAppSelector(getStatus);
   const member = useAppSelector(getMemberInfo);
+  const userName = useAppSelector(getUser);
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -36,12 +38,11 @@ export default function AddBalance() {
 
   const handleAddBalance = (e: any) => {
     e.preventDefault();
-      dispatch(postBalance({ ID: card?.ID, balance: balanceInputs }));
-      
-      setOpen(false);
-      setBalanceInputs(0);
-      setCardInputs("");
+    dispatch(postBalance({ ID: card?.ID, balance: balanceInputs, userName:userName }));
 
+    setOpen(false);
+    setBalanceInputs(0);
+    setCardInputs("");
   };
   return (
     <div>

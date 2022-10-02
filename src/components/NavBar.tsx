@@ -17,24 +17,27 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ticket from "assets/images/ticket.svg";
 import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
-import { getGateName, logout } from "api/Api";
+import { getGateName } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { getStatus, getGate, getGateID, resetAll } from "store/ticketsSlice";
 import { reset } from "store/paymentSlice";
 import { useAuth } from "utils/hooks/useIsAuthPages";
+import { useCookies } from "react-cookie";
 
 interface Props {}
 const NavBar: FunctionComponent<Props> = () => {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const user = useAuth();
-  const USER = useAppSelector((state: any) => state.tickets?.user);
-  const Isloading = useAppSelector(getStatus);
-  const GateName = useAppSelector(getGate);
-  const GateID: any = useAppSelector(getGateID);
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const { t } = useTranslation(),
+   dispatch = useAppDispatch(),
+   user = useAuth(),
+   USER = useAppSelector((state: any) => state.tickets?.user),
+   tickets = useAppSelector((state: any) => state.tickets.tickets),
+   Isloading = useAppSelector(getStatus),
+   GateName = useAppSelector(getGate),
+   GateID: any = useAppSelector(getGateID),
+   [cookies, setCookie, removeCookie] = useCookies(['token']),
+   [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null),
+   [isGateName , setIsGateName] = useState(false),
+   open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,13 +47,17 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if (USER && Isloading === "idle" && GateName === "") {
-      dispatch(getGateName(GateID));
-    }
-  }, [GateName, USER, dispatch, GateID]);
+    if (!isGateName) {
+      dispatch(getGateName(GateID)).then((res) => { 
+        if(res.meta.requestStatus === "fulfilled") {
+          setIsGateName(true)
+      }
+    });
+  }
+  },[isGateName]);
 
   const logoutHandle = () => {
-    dispatch(logout());
+    removeCookie('token');
     dispatch(resetAll());
     dispatch(reset());
   };

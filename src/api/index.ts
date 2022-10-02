@@ -2,21 +2,17 @@ import axios from "axios";
 
 const getBaseUrl = () => {
   let url;
-  switch(process.env.NODE_ENV) {
-    case 'production':
-      url = 'https://tk-api-backend.herokuapp.com/api'; 
+  switch (process.env.NODE_ENV) {
+    case "production":
+      url = "https://tk-api-backend.herokuapp.com/api";
       break;
-    case 'development':
+    case "development":
     default:
-      url = 'http://localhost:8080/api';
+      url = "http://localhost:8080/api";
   }
 
   return url;
-}
-
-// export default axios.create({
-//   baseURL: getBaseUrl(),
-// });
+};
 
 const Api = axios.create({
   baseURL: getBaseUrl(),
@@ -24,8 +20,9 @@ const Api = axios.create({
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
+    "Access-Control-Allow-Headers": "authorization",
   },
-  // timeout: 15000,
+  timeout: 15000,
 });
 
 export default Api;
