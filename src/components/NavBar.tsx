@@ -30,7 +30,6 @@ const NavBar: FunctionComponent<Props> = () => {
    dispatch = useAppDispatch(),
    user = useAuth(),
    USER = useAppSelector((state: any) => state.tickets?.user),
-   tickets = useAppSelector((state: any) => state.tickets.tickets),
    Isloading = useAppSelector(getStatus),
    GateName = useAppSelector(getGate),
    GateID: any = useAppSelector(getGateID),

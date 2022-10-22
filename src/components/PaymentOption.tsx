@@ -9,7 +9,6 @@ import {
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import Cash from "./Cash";
 import Card from "./Card";
 import { getSummary } from "store/ticketsSlice";
 import { payMethod } from "store/paymentSlice";
@@ -17,7 +16,7 @@ import { payMethod } from "store/paymentSlice";
 interface Props {}
 const PaymentOptions: FunctionComponent<Props> = () => {
   const { t } = useTranslation();
-  const [radioValue, setRadioValue] = useState("Cash");
+  const [radioValue, setRadioValue] = useState("Card");
   const [isTicketSelect, SetIsTicketSelect] = useState(false);
   const dispatch = useAppDispatch();
   const summary = useAppSelector(getSummary);
@@ -55,18 +54,12 @@ const PaymentOptions: FunctionComponent<Props> = () => {
           onChange={handleChangeRadio}
         >
           <FormControlLabel
-            value="Cash"
-            control={<Radio sx={{ color: "body.main", px: {xs:0 , sm:1} }} />}
-            label="Cash"
-            sx={{ mr: { xs: 3, sm: 5 } }}
-            disabled={isTicketSelect}
-          />
-          <FormControlLabel
             value="Card"
             control={<Radio sx={{ color: "body.main", px: {xs:0 , sm:1} }} />}
             label="Card"
             sx={{ mr: { xs: 3, sm: 5 } }}
             disabled={isTicketSelect}
+            
           />
           <FormControlLabel
             value="Visa"
@@ -78,9 +71,8 @@ const PaymentOptions: FunctionComponent<Props> = () => {
         </RadioGroup>
       </Stack>
       <Box sx={{ mt: { xs: 1.5, sm: 2 } }}>
-        {radioValue === "Cash" ? (
-          <Cash isTicketSelect={isTicketSelect} />
-        ) : radioValue === "Card" ? (
+        {
+         radioValue === "Card" ? (
           <Card isTicketSelect={isTicketSelect} />
         ) : (
           radioValue === "Visa" && (

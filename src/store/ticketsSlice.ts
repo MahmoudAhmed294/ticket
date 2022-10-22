@@ -47,39 +47,56 @@ export const ticketsSlice = createSlice({
       }
 
       if (state.Summary.length !== 0) {
-        const totalQuantity = state.Summary.map(
-          ({ quantity }) => quantity
-        ).reduce((total, num) => total + num);
-        const totalAmount = state.Summary.map(
-          ({ Amount, quantity }) => Amount
-        ).reduce((total, num) => total + num);
-        state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
+        const totalForItemQuantity = state.Summary.map(
+          ({ Amount, quantity }) => quantity * Amount
+        );
+        const totalForItemTax = state.Summary.map(
+          ({ Tax, quantity }) => quantity * Tax
+        );
+
+        const totalAmount = totalForItemQuantity.reduce(
           (total, num) => total + num
         );
-        state.total = (totalAmount - state.Tax) * totalQuantity;
+        state.Tax = totalForItemTax.reduce(
+          (total, num) => total + num
+        );
+
+        state.total = totalAmount -  state.Tax;
       } else {
         state.total = 0;
+        state.Tax = 0;
       }
     },
-    deleteTicketFromSummary: (state, action: PayloadAction<number>) => {
-      state.Summary = state.Summary.filter(
-        (value, index) => value.ID !== action.payload
+    deleteTicketFromSummary: (state, action: PayloadAction<any>) => {
+      state.Summary = state.Summary.map((ticket: any) =>
+        ticket.ID === action.payload
+          ? { ...ticket, quantity: (ticket.quantity -= 1) }
+          : ticket
       );
 
-      if (state.Summary.length !== 0) {
-        const totalQuantity = state.Summary.map(
-          ({ quantity }) => quantity
-        ).reduce((total, num) => total + num);
 
-        const totalAmount = state.Summary.map(({ Amount }) => Amount).reduce(
+      if (state.Summary.length !== 0) {
+        const totalForItemQuantity = state.Summary.map(
+          ({ Amount, quantity }) => quantity * Amount
+        );
+        const totalForItemTax = state.Summary.map(
+          ({ Tax, quantity }) => quantity * Tax
+        );
+
+        const totalAmount = totalForItemQuantity.reduce(
           (total, num) => total + num
         );
-        state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
+        const totalTax = totalForItemTax.reduce(
           (total, num) => total + num
         );
-        state.total = (totalAmount - state.Tax) * totalQuantity;
+
+        state.Tax = state.Summary.map(({ Tax  }) => Tax).reduce(
+          (total, num) => (total + num) 
+        );
+        state.total = totalAmount -  totalTax;
       } else {
         state.total = 0;
+        state.Tax = 0;
       }
     },
     resetAll: (state) => {

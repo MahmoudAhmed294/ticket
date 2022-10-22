@@ -14,7 +14,7 @@ import Tickets from "pages/Tickets";
 import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getStatus, getAllTickets, getUser } from "store/ticketsSlice";
+import { getStatus, getUser } from "store/ticketsSlice";
 import { checkToken, getBillNumber } from "api/Api";
 import { useCookies } from "react-cookie";
 

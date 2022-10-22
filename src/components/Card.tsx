@@ -7,10 +7,9 @@ import {
 } from "@mui/material";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getBillNumber, getCard } from "api/Api";
+import {  getCard } from "api/Api";
 import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import AddBalance from "./AddBalance";
 
 interface Props {
   isTicketSelect: boolean;
@@ -62,7 +61,6 @@ const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
               onChange={SearchAPi}
               disabled={isTicketSelect}
             />
-            <AddBalance />
           </Stack>
         </>
       </Box>

@@ -48,7 +48,6 @@ export const paymentSlice = createSlice({
         state.status = "idle";
         state.card = action.payload?.card;
         state.member = action.payload?.member;
-        // state.billNumber = action.payload?.billID;
       })
       .addCase(getCard.rejected, (state) => {
         state.status = "failed";

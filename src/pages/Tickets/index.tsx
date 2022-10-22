@@ -56,7 +56,7 @@ const Index: FunctionComponent<Props> = () => {
               md={6}
               xs={12}
               sx={{
-                borderLeft: { xs: "unset ", md: "1px solid" },
+                borderLeft: { xs: "unset ", md: "1px solid", height: "90vh" },
                 borderColor: { xs: "none", md: "primary.main" },
               }}
             >
