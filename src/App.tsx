@@ -14,15 +14,17 @@ import Tickets from "pages/Tickets";
 import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getStatus, getUser } from "store/ticketsSlice";
+import { getStatus, getUser ,getIsAdmin } from "store/ticketsSlice";
 import { checkToken, getBillNumber } from "api/Api";
 import { useCookies } from "react-cookie";
+import AddBalance from "pages/AddBalance";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
   const USER: any = useAppSelector(getUser);
+  const isAdmin: boolean = useAppSelector(getIsAdmin);
   const IsLoading = useAppSelector(getStatus);
   const [cookies, setCookie] = useCookies(["token"]);
 
@@ -34,7 +36,8 @@ function App() {
     if (IsLoading === "loading") {
       setIsLoaded(true);
     }
-    if (cookies.token && !USER) {
+    
+    if (cookies.token && !USER ) {
       dispatch(checkToken(cookies.token)).then((res) => {
         if (res.meta.requestStatus === "fulfilled") {
           setIsLoaded(false);
@@ -54,10 +57,20 @@ function App() {
       ) : (
         <Router>
           <Routes>
-            <Route
-              element={USER ? <Tickets /> : <Navigate to="/login" />}
-              path="/"
-            />
+            {
+              USER ? (
+                <>
+                <Route path="/" element={isAdmin ? <AddBalance /> : <Tickets />} />
+                  </>
+
+              ):(
+                <Route
+                element={USER ? <Tickets /> : <Navigate to="/login" />}
+                path="/"
+                />
+
+              )
+            }
 
             <Route path="/login" element={<Login />} />
           </Routes>

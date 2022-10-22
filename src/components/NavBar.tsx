@@ -19,7 +19,7 @@ import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
 import { getGateName } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getStatus, getGate, getGateID, resetAll } from "store/ticketsSlice";
+import { getStatus, getGate, getGateID, resetAll , getIsAdmin } from "store/ticketsSlice";
 import { reset } from "store/paymentSlice";
 import { useAuth } from "utils/hooks/useIsAuthPages";
 import { useCookies } from "react-cookie";
@@ -31,6 +31,7 @@ const NavBar: FunctionComponent<Props> = () => {
    user = useAuth(),
    USER = useAppSelector((state: any) => state.tickets?.user),
    Isloading = useAppSelector(getStatus),
+   isAdmin = useAppSelector(getIsAdmin),
    GateName = useAppSelector(getGate),
    GateID: any = useAppSelector(getGateID),
    [cookies, setCookie, removeCookie] = useCookies(['token']),
@@ -46,7 +47,7 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if (!isGateName) {
+    if (!isGateName && !isAdmin) {
       dispatch(getGateName(GateID)).then((res) => { 
         if(res.meta.requestStatus === "fulfilled") {
           setIsGateName(true)

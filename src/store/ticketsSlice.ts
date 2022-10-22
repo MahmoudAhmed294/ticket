@@ -10,6 +10,7 @@ export interface TicketsState {
   Tax: number;
   gate: string;
   user: string | undefined;
+  isAdmin: boolean;
   validate: any;
   tickets: [];
   GateID: number | undefined;
@@ -20,6 +21,7 @@ const initialState: TicketsState = {
   Summary: [],
   total: 0,
   Tax: 0,
+  isAdmin: false,
   gate: "",
   user: undefined,
   tickets: [],
@@ -57,11 +59,9 @@ export const ticketsSlice = createSlice({
         const totalAmount = totalForItemQuantity.reduce(
           (total, num) => total + num
         );
-        state.Tax = totalForItemTax.reduce(
-          (total, num) => total + num
-        );
+        state.Tax = totalForItemTax.reduce((total, num) => total + num);
 
-        state.total = totalAmount -  state.Tax;
+        state.total = totalAmount - state.Tax;
       } else {
         state.total = 0;
         state.Tax = 0;
@@ -74,7 +74,6 @@ export const ticketsSlice = createSlice({
           : ticket
       );
 
-
       if (state.Summary.length !== 0) {
         const totalForItemQuantity = state.Summary.map(
           ({ Amount, quantity }) => quantity * Amount
@@ -86,14 +85,12 @@ export const ticketsSlice = createSlice({
         const totalAmount = totalForItemQuantity.reduce(
           (total, num) => total + num
         );
-        const totalTax = totalForItemTax.reduce(
+        const totalTax = totalForItemTax.reduce((total, num) => total + num);
+
+        state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
           (total, num) => total + num
         );
-
-        state.Tax = state.Summary.map(({ Tax  }) => Tax).reduce(
-          (total, num) => (total + num) 
-        );
-        state.total = totalAmount -  totalTax;
+        state.total = totalAmount - totalTax;
       } else {
         state.total = 0;
         state.Tax = 0;
@@ -121,6 +118,7 @@ export const ticketsSlice = createSlice({
           quantity: 1,
         }));
         state.tickets = addQuantity;
+        state.isAdmin = action.payload.isAdmin;
       })
       .addCase(getLogin.rejected, (state, action) => {
         state.status = "failed";
@@ -142,6 +140,8 @@ export const ticketsSlice = createSlice({
           quantity: 1,
         }));
         state.tickets = addQuantity;
+        state.isAdmin = action.payload.isAdmin;
+
       })
       .addCase(checkToken.rejected, (state) => {
         state.status = "failed";
@@ -175,5 +175,6 @@ export const getAllTickets = (state: RootState) => state.tickets.tickets;
 export const getGateID = (state: RootState) => state.tickets.GateID;
 export const getGate = (state: RootState) => state.tickets.gate;
 export const getValidate = (state: RootState) => state.tickets.validate;
+export const getIsAdmin = (state: RootState) => state.tickets.isAdmin;
 
 export default ticketsSlice.reducer;
