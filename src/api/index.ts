@@ -4,7 +4,7 @@ const getBaseUrl = () => {
   let url;
   switch (process.env.NODE_ENV) {
     case "production":
-      url = "https://tk-api-backend.herokuapp.com/api";
+      url = "https://ticket-be.herokuapp.com/api";
       break;
     case "development":
     default:
