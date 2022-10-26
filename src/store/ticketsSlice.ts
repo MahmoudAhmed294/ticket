@@ -141,7 +141,6 @@ export const ticketsSlice = createSlice({
         }));
         state.tickets = addQuantity;
         state.isAdmin = action.payload.isAdmin;
-
       })
       .addCase(checkToken.rejected, (state) => {
         state.status = "failed";

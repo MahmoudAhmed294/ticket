@@ -67,7 +67,13 @@ const Login = () => {
         secure: true,
         maxAge: 168 * 60 * 60,
       });
-    });
+      
+    }).catch((err)=>{
+
+      console.log(err);
+    setOpenAlert(true);
+      
+    })
   };
   const handleClose = () => {
     setOpenAlert(false);

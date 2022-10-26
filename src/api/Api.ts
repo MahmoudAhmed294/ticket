@@ -10,12 +10,6 @@ export const getLogin = createAsyncThunk(
       method: "POST",
       data: form,
     })
-      .then((res) => {
-        return res;
-      })
-      .catch((res) => {
-        return res;
-      });
 
     return response?.data;
   }

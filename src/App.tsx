@@ -35,6 +35,8 @@ function App() {
   useEffect(() => {
     if (IsLoading === "loading") {
       setIsLoaded(true);
+    } else {
+      setIsLoaded(false);
     }
 
     if (cookies.token && !USER) {
@@ -45,6 +47,8 @@ function App() {
           setIsLoaded(false);
         }
       });
+    } else {
+      setIsLoaded(false);
     }
   }, [USER, setIsLoaded, dispatch, cookies]);
   useEffect(() => {
@@ -81,13 +85,3 @@ function App() {
 }
 
 export default App;
-
-/* 
-TODO ticket api handle repeated 
-TODO reduce  redux slice 
-TODO loader in name and balance 
-TODO make radio as  taps
-TODO 
-
-
-*/

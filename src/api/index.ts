@@ -20,9 +20,8 @@ const Api = axios.create({
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
-    "Access-Control-Allow-Headers": "authorization",
   },
-  timeout: 15000,
+  timeout: 10000,
 });
 
 export default Api;
