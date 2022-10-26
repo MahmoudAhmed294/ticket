@@ -47,7 +47,7 @@ const NavBar: FunctionComponent<Props> = () => {
     setAnchorEl(null);
   };
   useEffect(() => {
-    if (!isGateName && !isAdmin) {
+    if (!isGateName ) {
       dispatch(getGateName(GateID)).then((res) => { 
         if(res.meta.requestStatus === "fulfilled") {
           setIsGateName(true)
