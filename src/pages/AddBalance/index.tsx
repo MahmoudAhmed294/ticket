@@ -120,6 +120,10 @@ export default function AddBalance() {
               label="add balance"
               type="number"
               sx={{ my: 2 }}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+        
               required
               fullWidth
               variant="outlined"

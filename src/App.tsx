@@ -50,7 +50,7 @@ function App() {
     } else {
       setIsLoaded(false);
     }
-  }, [USER, setIsLoaded, dispatch, cookies]);
+  }, [USER, setIsLoaded, cookies]);
   useEffect(() => {
     dispatch(getBillNumber());
   }, [getBillNumber]);
