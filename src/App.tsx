@@ -14,64 +14,53 @@ import Tickets from "pages/Tickets";
 import { toggleLanguage } from "store/languageSlice";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getStatus, getUser, getIsAdmin } from "store/ticketsSlice";
-import { checkToken, getBillNumber } from "api/Api";
+import {   getIsAdmin, addUser } from "store/ticketsSlice";
+import {  getBillNumber } from "api/Api";
 import { useCookies } from "react-cookie";
 import AddBalance from "pages/AddBalance";
+import { useCheckTokenQuery } from "api/loginApi";
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(false);
   const language = ClientStorage.get("language");
   const dispatch = useAppDispatch();
-  const USER: any = useAppSelector(getUser);
+  const USER: any = useAppSelector(state=> state.tickets.user);
   const isAdmin: boolean = useAppSelector(getIsAdmin);
-  const IsLoading = useAppSelector(getStatus);
   const [cookies, setCookie] = useCookies(["token"]);
+  const { data, isLoading, error , isError ,isSuccess } = useCheckTokenQuery(cookies.token);
 
   useEffect(() => {
     dispatch(toggleLanguage(language === "ar" ? "ar" : "en"));
   }, [dispatch, language]);
 
   useEffect(() => {
-    if (IsLoading === "loading") {
-      setIsLoaded(true);
-    } else {
-      setIsLoaded(false);
+  if (isSuccess) {
+    dispatch(addUser(data))    
     }
+    
 
-    if (cookies.token && !USER) {
-      dispatch(checkToken(cookies.token)).then((res) => {
-        if (res.meta.requestStatus === "fulfilled") {
-          setIsLoaded(false);
-        } else if (res.meta.requestStatus === "rejected") {
-          setIsLoaded(false);
-        }
-      });
-    } else {
-      setIsLoaded(false);
-    }
-  }, [USER, setIsLoaded, cookies]);
+  }, [data ,isSuccess]);
+
   useEffect(() => {
     dispatch(getBillNumber());
   }, [getBillNumber]);
 
   return (
     <Box>
-      {isLoaded || IsLoading === "loading" ? (
+      {isLoading ? (
         <Loading />
       ) : (
-        <Router>
+            <Router>
           <Routes>
-            {USER ? (
+            {data ? (
               <>
                 <Route
                   path="/"
-                  element={isAdmin ? <AddBalance /> : <Tickets />}
+                  element={data.isAdmin ? <AddBalance /> : <Tickets />}
                 />
               </>
             ) : (
               <Route
-                element={USER ? <Tickets /> : <Navigate to="/login" />}
+                element={data ? <Tickets /> : <Navigate to="/login" />}
                 path="/"
               />
             )}

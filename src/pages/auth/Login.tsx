@@ -10,8 +10,6 @@ import {
   Button,
   Stack,
   Typography,
-  Alert,
-  Snackbar,
 } from "@mui/material";
 
 import Grid from "@mui/material/Grid";
@@ -23,10 +21,12 @@ import loginBg from "assets/images/loginbg.jpg";
 import logo from "assets/images/logoBlue.svg";
 import { ClientStorage } from "utils/hooks/useLocalStroge";
 import { useTranslation } from "react-i18next";
-import { getLogin } from "api/Api";
-import { useAuth } from "utils/hooks/useIsAuthPages";
-import { getValidate } from "store/ticketsSlice";
+import { addUser} from "store/ticketsSlice";
 import { useCookies } from "react-cookie";
+import { useLoginMutation } from "api/loginApi";
+import Loading from "components/Loading";
+import { useSnackbar } from "notistack";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,10 +34,11 @@ const Login = () => {
   const [form, setForm] = useState({ userName: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const language = useAppSelector(getLanguage);
-  const validate = useAppSelector(getValidate);
   const dispatch = useAppDispatch();
-  const auth = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
   const [cookies, setCookie] = useCookies(["token"]);
+
+  const [login, { data, isLoading, error , isError  }]: any = useLoginMutation();
 
   const changeLanguage = () => {
     switch (language) {
@@ -54,34 +55,43 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (auth) {
+    if (data) {
+      console.log(data);
+
+      setCookie("token", data.token, {
+        secure: true,
+        maxAge: 24 * 60 * 60 *1000,
+      });
+      dispatch(addUser(data));
       navigate("/");
     }
+    else if(isError){
+      enqueueSnackbar(`Error while login - ${error.data}`, { variant: "error" });
+
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, [data]);
+
+  useEffect(() => {
+    if (isError) {
+      enqueueSnackbar(`Error while login - ${error.data}`, { variant: "error" });
+    }
+  }, [enqueueSnackbar, error ,isError]);
 
   const handleLogin = (e: React.SyntheticEvent<EventTarget>) => {
     e.preventDefault();
-    dispatch(getLogin(form)).then((res) => {
-      setCookie("token", res.payload.token, {
-        secure: true,
-        maxAge: 168 * 60 * 60,
-      });
-      
-    }).catch((err)=>{
+    if(form.password !== '' && form.userName !== ''){
+      login(form);
+    }else{
+      enqueueSnackbar(`Error while login - please enter username and password`, { variant: "error" });
 
-      console.log(err);
-    setOpenAlert(true);
-      
-    })
+    }
   };
-  const handleClose = () => {
-    setOpenAlert(false);
-  };
-  const [openAlert, setOpenAlert] = useState(true);
 
   return (
     <Grid container sx={{ height: "100vh" }} alignItems="center">
+      {isLoading ? <Loading /> : null}
       <Grid item sx={{ display: { xs: "none", md: "flex" } }} md={6}>
         <img
           src={loginBg}
@@ -177,32 +187,6 @@ const Login = () => {
           </Stack>
         </Stack>
       </Grid>
-      <Snackbar
-        open={validate ? openAlert : false}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        sx={{
-          "& .MuiPaper-root": {
-            backgroundColor: "error.main",
-            color: "body.light",
-            alignItems: "center",
-            "& .MuiAlert-icon": {
-              color: "body.light",
-            },
-          },
-        }}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="error"
-          sx={{
-            width: "100%",
-            color: "body.light",
-          }}
-        >
-          {validate}
-        </Alert>
-      </Snackbar>
     </Grid>
   );
 };

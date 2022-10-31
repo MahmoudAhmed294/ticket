@@ -56,4 +56,4 @@ export const { changeDir, toggleLanguage } = languageSlice.actions;
 export const getDir = (state: RootState) => state.language.dir;
 export const getLanguage = (state: RootState) => state.language.language;
 
-export default languageSlice.reducer;
+export default languageSlice;

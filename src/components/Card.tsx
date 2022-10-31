@@ -7,27 +7,36 @@ import {
 } from "@mui/material";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {  getCard } from "api/Api";
-import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
+import { getCardInfo, getMemberInfo, addCard } from "store/paymentSlice";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
+import { useGetCardMutation } from "api/cardApi";
 
 interface Props {
   isTicketSelect: boolean;
 }
 const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
   const { t } = useTranslation();
-  const IsLoading = useAppSelector(getStatus);
   const member = useAppSelector(getMemberInfo);
   const card = useAppSelector(getCardInfo);
   const [searchValue, setSearchValue] = useState("");
   const dispatch = useAppDispatch();
 
+  const [getCard,{data, error , isLoading ,isSuccess}] =useGetCardMutation()
+
   const SearchAPi = (e: any) => {
+
     setSearchValue(e.target.value);
     if (e.target.value.length >= 6) {
-      dispatch(getCard(e.target.value));
+      getCard(e.target.value)
+      
     }
   };
+  useEffect(() => {
+    console.log(data);
+    if(data){
+      dispatch(addCard(data))
+    }
+  }, [isSuccess ,data]);
   useEffect(() => {
     if (!isTicketSelect) {
       setSearchValue("");
@@ -75,7 +84,7 @@ const Card: FunctionComponent<Props> = ({ isTicketSelect }) => {
           maxWidth: { xs: "100%", md: "470px" },
         }}
       >
-        {IsLoading === "loading" ? (
+        {isLoading? (
           <CircularProgress
             color="inherit"
             sx={{

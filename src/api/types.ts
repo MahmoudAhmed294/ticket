@@ -1,8 +1,9 @@
 export type LoginResponse = {
-  ID?: number;
-  GateID?: number;
-  UserName?: string;
-  name?: string;
+  GateID: number;
+  userName: string;
+  token:string
+  isAdmin: boolean
+  tickets:ticket[]
 };
 export type LoginInput = {
   userName: string;
@@ -15,6 +16,7 @@ export type ticket = {
   Amount: number;
   Tax: number;
   quantity: number;
+  SerialNumber: string
 };
 
 export type Card = {

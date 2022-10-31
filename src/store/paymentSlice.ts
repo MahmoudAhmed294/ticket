@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  getCard,
-  getMember,
   PostBill,
   getBillNumber,
   getBillNumberOfTicket,
@@ -37,33 +35,12 @@ export const paymentSlice = createSlice({
       state.member = undefined;
     },
     reset: () => initialState,
+    addCard: (state, action: PayloadAction<any>) => {
+      state.card = action.payload.card;
+      state.member = action.payload.member;
+    },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(getCard.pending, (state) => {
-        state.status = "loading";
-      })
-
-      .addCase(getCard.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.card = action.payload?.card;
-        state.member = action.payload?.member;
-      })
-      .addCase(getCard.rejected, (state) => {
-        state.status = "failed";
-      });
-    builder
-      .addCase(getMember.pending, (state) => {
-        state.status = "loading";
-      })
-
-      .addCase(getMember.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.member = action.payload;
-      })
-      .addCase(getMember.rejected, (state) => {
-        state.status = "failed";
-      });
     builder
       .addCase(PostBill.pending, (state) => {
         state.status = "loading";
@@ -99,7 +76,6 @@ export const paymentSlice = createSlice({
       .addCase(getBillNumberOfTicket.fulfilled, (state, action) => {
         state.status = "idle";
         state.billNumber = action.payload;
-
       })
       .addCase(getBillNumberOfTicket.rejected, (state) => {
         state.status = "failed";
@@ -112,7 +88,6 @@ export const paymentSlice = createSlice({
       .addCase(postBalance.fulfilled, (state, action) => {
         state.status = "idle";
         state.card = action.payload;
-
       })
       .addCase(postBalance.rejected, (state) => {
         state.status = "failed";
@@ -120,11 +95,11 @@ export const paymentSlice = createSlice({
   },
 });
 
-export const { payMethod, reset } = paymentSlice.actions;
+export const { payMethod, reset ,addCard } = paymentSlice.actions;
 
 export const getStatus = (state: RootState) => state.payment.status;
 export const getCardInfo = (state: RootState) => state.payment.card;
 export const getMemberInfo = (state: RootState) => state.payment.member;
 export const billNumber = (state: RootState) => state.payment.billNumber;
 
-export default paymentSlice.reducer;
+export default paymentSlice;

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { checkToken, getLogin, getGateName, PostBill } from "api/Api";
-import { ticket } from "api/types";
+import {  PostBill } from "api/Api";
+import { ticket , LoginResponse } from "api/types";
 import { RootState } from "./store";
 
 export interface TicketsState {
@@ -12,7 +12,7 @@ export interface TicketsState {
   user: string | undefined;
   isAdmin: boolean;
   validate: any;
-  tickets: [];
+  tickets: ticket[];
   GateID: number | undefined;
 }
 
@@ -78,18 +78,18 @@ export const ticketsSlice = createSlice({
         const totalForItemQuantity = state.Summary.map(
           ({ Amount, quantity }) => quantity * Amount
         );
+        
         const totalForItemTax = state.Summary.map(
           ({ Tax, quantity }) => quantity * Tax
-        );
+          );
+          
+          const totalAmount = totalForItemQuantity.reduce(
+            (total, num) => total + num
+            );
+            const totalTax = totalForItemTax.reduce((total, num) => total + num);
+            
+        state.Tax = totalTax;
 
-        const totalAmount = totalForItemQuantity.reduce(
-          (total, num) => total + num
-        );
-        const totalTax = totalForItemTax.reduce((total, num) => total + num);
-
-        state.Tax = state.Summary.map(({ Tax }) => Tax).reduce(
-          (total, num) => total + num
-        );
         state.total = totalAmount - totalTax;
       } else {
         state.total = 0;
@@ -102,58 +102,22 @@ export const ticketsSlice = createSlice({
       state.user = undefined;
       state.tickets = [];
     },
+
+    addUser:(state , action: PayloadAction<LoginResponse> ) =>{
+      state.user = action.payload.userName;
+      state.GateID = action.payload.GateID;
+      state.tickets = action.payload.tickets;
+      state.isAdmin = action.payload.isAdmin;
+
+    },
+    addGateName:(state , action: PayloadAction<any>)=>{
+      state.gate = action.payload?.Name;
+
+    }
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(getLogin.pending, (state) => {
-        state.status = "loading";
-      })
 
-      .addCase(getLogin.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.user = action.payload?.userName;
-        state.GateID = action.payload?.GateID;
-        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
-          ...ticket,
-          quantity: 1,
-        }));
-        state.tickets = addQuantity;
-        state.isAdmin = action.payload.isAdmin;
-      })
-      .addCase(getLogin.rejected, (state, action) => {
-        state.status = "failed";
-        state.validate = action.payload;
-      });
 
-    builder
-      .addCase(checkToken.pending, (state) => {
-        state.status = "loading";
-      })
-
-      .addCase(checkToken.fulfilled, (state, action) => {
-        state.status = "idle";
-
-        state.user = action.payload?.userName;
-        state.GateID = action.payload?.GateID;
-        const addQuantity = action.payload?.tickets.map((ticket: any) => ({
-          ...ticket,
-          quantity: 1,
-        }));
-        state.tickets = addQuantity;
-        state.isAdmin = action.payload.isAdmin;
-      })
-      .addCase(checkToken.rejected, (state) => {
-        state.status = "failed";
-      });
-
-    builder
-      .addCase(getGateName.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.gate = action.payload?.Name;
-      })
-      .addCase(getGateName.rejected, (state) => {
-        state.status = "failed";
-      });
     builder.addCase(PostBill.fulfilled, (state, action) => {
       state.Summary = [];
       state.total = 0;
@@ -162,7 +126,7 @@ export const ticketsSlice = createSlice({
   },
 });
 
-export const { addTicketToSummary, deleteTicketFromSummary, resetAll } =
+export const { addTicketToSummary, deleteTicketFromSummary, resetAll ,addUser ,addGateName } =
   ticketsSlice.actions;
 
 export const getUser = (state: RootState) => state.tickets.user;
@@ -176,4 +140,4 @@ export const getGate = (state: RootState) => state.tickets.gate;
 export const getValidate = (state: RootState) => state.tickets.validate;
 export const getIsAdmin = (state: RootState) => state.tickets.isAdmin;
 
-export default ticketsSlice.reducer;
+export default ticketsSlice;

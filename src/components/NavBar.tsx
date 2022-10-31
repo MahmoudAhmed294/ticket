@@ -17,27 +17,29 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ticket from "assets/images/ticket.svg";
 import { Logout, Person } from "@mui/icons-material";
 import { IsScreenIn_sm } from "utils/hooks/IsScreenIn_sm";
-import { getGateName } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
-import { getStatus, getGate, getGateID, resetAll , getIsAdmin } from "store/ticketsSlice";
+import {
+  getGate,
+  getGateID,
+  resetAll,
+  addGateName,
+} from "store/ticketsSlice";
 import { reset } from "store/paymentSlice";
-import { useAuth } from "utils/hooks/useIsAuthPages";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { useGetGateNameQuery } from "api/loginApi";
 
 interface Props {}
 const NavBar: FunctionComponent<Props> = () => {
   const { t } = useTranslation(),
-   dispatch = useAppDispatch(),
-   user = useAuth(),
-   USER = useAppSelector((state: any) => state.tickets?.user),
-   Isloading = useAppSelector(getStatus),
-   isAdmin = useAppSelector(getIsAdmin),
-   GateName = useAppSelector(getGate),
-   GateID: any = useAppSelector(getGateID),
-   [cookies, setCookie, removeCookie] = useCookies(['token']),
-   [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null),
-   [isGateName , setIsGateName] = useState(false),
-   open = Boolean(anchorEl);
+    dispatch = useAppDispatch(),
+    USER = useAppSelector((state: any) => state.tickets?.user),
+    GateName = useAppSelector(getGate),
+    navigate = useNavigate(),
+    GateID: any = useAppSelector(getGateID),
+    [cookies, setCookie, removeCookie] = useCookies(["token"]),
+    [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null),
+    open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,18 +48,17 @@ const NavBar: FunctionComponent<Props> = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const { data, isLoading } = useGetGateNameQuery(GateID);
+
   useEffect(() => {
-    if (!isGateName ) {
-      dispatch(getGateName(GateID)).then((res) => { 
-        if(res.meta.requestStatus === "fulfilled") {
-          setIsGateName(true)
-      }
-    });
-  }
-  },[isGateName]);
+    if (data) {
+      dispatch(addGateName(data));
+    }
+  }, [data]);
 
   const logoutHandle = () => {
-    removeCookie('token');
+    navigate("/login", { replace: true });
+    removeCookie("token");
     dispatch(resetAll());
     dispatch(reset());
   };
@@ -98,7 +99,7 @@ const NavBar: FunctionComponent<Props> = () => {
                   <img src={ticket} alt="ticket" />
                   <Typography variant="h1">{t("Tickets")}</Typography>
                 </Stack>
-                {Isloading === "loading" ? (
+                {isLoading ? (
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -133,7 +134,7 @@ const NavBar: FunctionComponent<Props> = () => {
                       sx={{ color: "body.light" }}
                     >
                       <Avatar alt="Mahmoud" />
-                      <Typography variant="body2">{user}</Typography>
+                      <Typography variant="body2">{USER}</Typography>
                       <KeyboardArrowDownIcon />
                     </Stack>
                   </Button>

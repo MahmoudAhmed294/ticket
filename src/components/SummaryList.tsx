@@ -115,11 +115,11 @@ const SummaryList: FunctionComponent<Props> = () => {
         <Stack
           direction="column"
           alignItems="top"
-          justifyContent="center"
+          justifyContent="flex-start"
           spacing={1}
           sx={{
             overflowY: "auto",
-            maxHeight: "360px",
+            maxHeight: "370px",
             "::-webkit-scrollbar": {
               width: "3px",
             },

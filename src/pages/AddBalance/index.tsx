@@ -2,31 +2,58 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
-import { getCard, postBalance } from "api/Api";
 import { useAppDispatch, useAppSelector } from "utils/hooks/useStore";
 import { CircularProgress, Stack, Typography, Box } from "@mui/material";
-import { getCardInfo, getMemberInfo, getStatus } from "store/paymentSlice";
+import { addCard, getCardInfo } from "store/paymentSlice";
 import { getUser } from "store/ticketsSlice";
 import { Container } from "@mui/system";
 import NavBar from "components/NavBar";
+import { useGetCardMutation, useAddBalanceMutation } from "api/cardApi";
+import { useEffect } from "react";
+import { useSnackbar } from "notistack";
 
 export default function AddBalance() {
   const [cardInputs, setCardInputs] = React.useState<any>("");
-  const [balanceInputs, setBalanceInputs] = React.useState<any>(0);
+  const [balanceInputs, setBalanceInputs] = React.useState<any>("");
   const card = useAppSelector(getCardInfo);
-  const IsLoading = useAppSelector(getStatus);
-  const member = useAppSelector(getMemberInfo);
   const userName = useAppSelector(getUser);
+  const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const [getCard, { data, error, isLoading }]: any = useGetCardMutation();
+  const [
+    addBalance,
+    { data: dataBalance, isSuccess: isSuccessBalance, error: errorBalance },
+  ]:any = useAddBalanceMutation();
 
   const SearchAPi = (e: any) => {
     setCardInputs(e.target.value);
     if (e.target.value.length >= 6) {
-      dispatch(getCard(e.target.value));
+      getCard(e.target.value);
     }
   };
+  useEffect(() => {
+    if (data) {
+      dispatch(addCard(data));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(`Error while login - ${error.data}`, {
+        variant: "error",
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (errorBalance) {
+      enqueueSnackbar(`Error while login - ${errorBalance.data}`, {
+        variant: "error",
+      });
+    }
+  }, [errorBalance]);
 
   const handleClose = (e: any) => {
     setCardInputs("");
@@ -34,11 +61,19 @@ export default function AddBalance() {
   };
   const handleAddBalance = (e: any) => {
     e.preventDefault();
-    dispatch(
-      postBalance({ ID: card?.ID, balance: balanceInputs, userName: userName })
-    );
+    addBalance({
+      ID: data.card?.ID,
+      balance: balanceInputs,
+      userName: userName,
+    });
+    console.log(dataBalance);
 
-    setBalanceInputs(0);
+    if (isSuccessBalance) {
+      getCard(cardInputs);
+      enqueueSnackbar(`charging the balance is done`, { variant: "success" });
+    }
+
+    setBalanceInputs("");
     setCardInputs("");
   };
   return (
@@ -72,7 +107,7 @@ export default function AddBalance() {
               value={cardInputs}
               onChange={SearchAPi}
             />
-            {IsLoading === "loading" ? (
+            {isLoading ? (
               <Stack>
                 <CircularProgress
                   color="inherit"
@@ -90,12 +125,14 @@ export default function AddBalance() {
                 alignItems="baseline"
                 justifyContent={"space-between"}
               >
-                {member?.Name ? (
+                {data?.member?.Name ? (
                   <Stack direction="row" spacing={0.5} alignItems="baseline">
                     <Typography variant="h5" sx={{ color: "primary.main" }}>
                       {t("Member name:")}
                     </Typography>
-                    <Typography variant="caption">{member?.Name}</Typography>
+                    <Typography variant="caption">
+                      {data?.member?.Name}
+                    </Typography>
                   </Stack>
                 ) : (
                   cardInputs.length >= 6 && (
@@ -104,12 +141,14 @@ export default function AddBalance() {
                     </Typography>
                   )
                 )}
-                {card?.Balance && (
+                {data?.card?.Balance && (
                   <Stack direction="row" spacing={0.5} alignItems="baseline">
                     <Typography variant="h5" sx={{ color: "primary.main" }}>
                       {t("card Balance:")}
                     </Typography>
-                    <Typography variant="caption">{card?.Balance}</Typography>
+                    <Typography variant="caption">
+                      {data?.card?.Balance}
+                    </Typography>
                   </Stack>
                 )}
               </Stack>
@@ -121,14 +160,15 @@ export default function AddBalance() {
               type="number"
               sx={{ my: 2 }}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
-        
               required
               fullWidth
               variant="outlined"
               value={balanceInputs}
-              onChange={(e) => setBalanceInputs(e.target.value)}
+              onChange={(e) =>
+                +e.target.value > -1 ? setBalanceInputs(e.target.value) : ""
+              }
             />
             <Stack direction="row" justifyContent="space-between" mt={4}>
               <Button onClick={handleClose} variant="outlined" size="small">
@@ -139,7 +179,7 @@ export default function AddBalance() {
                 variant="contained"
                 size="small"
                 type="submit"
-                disabled={IsLoading === "loading" || cardInputs.length < 6}
+                disabled={isLoading || cardInputs.length < 6}
               >
                 {t("Add Balance")}
               </Button>
